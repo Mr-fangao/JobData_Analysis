@@ -26,8 +26,6 @@
     "@vue/cli-plugin-eslint": "^3.0.1",
     "@vue/cli-service": "^3.0.1",
     "@vue/eslint-config-standard": "^3.0.1",
-    "jQuery": "^1.7.4",
-    "less": "^2.7.3",
     "less-loader": "^4.1.0",
     "vue-template-compiler": "^2.5.17"
   }

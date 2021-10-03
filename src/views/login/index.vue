@@ -49,7 +49,7 @@
 			this.begin();
 		},
 		methods:{
-			begin(){
+			begin(){            
 				this.letters=this.str.split("")
 				for(var i=0;i<this.letters.length;i++){
 					setTimeout(this.write(i),i*100);

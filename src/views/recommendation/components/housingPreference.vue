@@ -8,15 +8,15 @@
     </div>
     <div style="overflow: hidden;">
       <div style="float: right">
-        <Input v-model="value" placeholder="请输入岗位名称"
+        <Input v-model="value" placeholder="请输入岗位名称" 
 					style="width: 180px; border: white;margin: 10px;" />
-        <Button
+        <Button 
 					type="success" class="submit" @click="getinfo"
 					style="background: rgba(0, 0, 0, 0.65);border: rgba(0, 0, 0, 0.5); font-weight: 900;">查询
 				</Button>
       </div>
     </div>
-    <Table style="background-color: #0090FF;" height="1000" stripe border :columns="columns5" :data="data5"></Table>
+    <Table style="background-color: #000000;" height="1000" stripe border :columns="columns5" :data="data5"></Table>
   </Card>
 </template>
 <script>
@@ -92,7 +92,7 @@ export default {
 									props: { type: "success", size: "small",},
 									style: { marginRight: "5px", backgroundColor: "rgba(0, 0, 0, 0.6)", borderColor: "white", },
 									on: {
-										click: () => {
+										click: () => { 
 											this.$router.push("/houseinfo");
 										},
 									},
