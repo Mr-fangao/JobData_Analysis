@@ -1,0 +1,489 @@
+<template>
+	<div>
+		<div id="main" style="overflow-y:auto;width: 23.4%;height: 600px;background-color: rgba(0,0,0,0.5);position: absolute;top: 7.6%;right: 0.2%;z-index: 0;">
+			<p style="width: 100%;height: 40px;line-height:40px; font-size: 16px;text-align: center;color: #fff;font-weight: 900;background-color: rgba(0, 0, 0, 0.5);">
+				----点击城市,查看招聘数量的日/月变化----
+			</p>
+			
+			<!-- 全国范围 -->
+			<div id="AllOverCountry" style="width: 100%;height: 50px;line-height: 50px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">全 国</div>
+				<Button type="primary" @click="JobNum_Day" size="midlle" style="font-size: 14px;margin:0 3px 0 0;width:154px;height:36px;background: rgba(255, 0, 0, 0.7);border: rgba(255, 0, 0, 0.7);"> 全国---日变化 </Button>
+				<Button type="primary" @click="JobNum_Month" size="midlle" style="font-size: 14px;margin:0 3px 0 0;width:154px;height:36px;background: rgba(255, 0, 0, 0.7);border: rgba(255, 0, 0, 0.7);"> 全国---月变化 </Button>
+				<Modal v-model="modDay" class-name="vertical-center-modal" width="700">
+					<div id="trendDay" style="height: 250px;width: 670px;"></div> 
+				</Modal>
+				<Modal v-model="modMonth" class-name="vertical-center-modal" width="700"> 
+					<div id="trendMonth" style="height: 250px;width: 670px;"></div> 
+				</Modal>
+			</div>
+			
+			<!-- 直辖市 -->
+			<div id="a3" style="width: 100%;height: 50px;line-height: 50px;">
+				<div class="left">直 辖 市</div>
+				<Button class='btn btn2' @click="BJ" type="primary" size="midlle"  style="background-color: rgba(255, 85, 0, 0.7);border-color: rgba(255, 85, 0, 0.7);"> 北京 </Button>
+				<Button class='btn btn2' @click="SH" type="primary" size="midlle" style="background-color: rgba(255, 85, 0, 0.7);border-color: rgba(255, 85, 0, 0.7);"> 上海 </Button>
+				<Button class='btn btn2' @click="TJ" type="primary" size="midlle" style="background-color: rgba(255, 85, 0, 0.7);border-color: rgba(255, 85, 0, 0.7);"> 天津 </Button>
+				<Button class='btn btn2' @click="ChQ" type="primary" size="midlle" style="background-color: rgba(255, 85, 0, 0.7);border-color: rgba(255, 85, 0, 0.7);"> 重庆 </Button>
+				<!-- 对话框折线图 -->
+				<Modal v-model="BeiJing" width="700" class-name="vertical-center-modal"> 
+					<div id="trendBeiJing_day" style="height: 200px;width: 670px;"></div>
+					<div id="trendBeiJing_month" style="height: 200px;width: 670px;"></div>
+				</Modal>
+				<Modal v-model="ShangHai" width="700" class-name="vertical-center-modal">
+					<div id="trendShangHai_day" style="height: 200px;width: 670px;"></div>
+					<div id="trendShangHai_month" style="height: 200px;width: 670px;"></div>
+				</Modal>
+			</div>
+			
+			<!-- 安徽省 -->
+			<div id="a4" style="width: 100%;height: 150px;line-height: 37px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">安 徽 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 合肥 </Button> <Button class='btn btn2' type="primary" size="midlle"> 芜湖 </Button> <Button class='btn btn2' type="primary" size="midlle"> 蚌埠 </Button> <Button class='btn btn2' type="primary" size="midlle"> 淮南 </Button> <Button class='btn btn2' type="primary" size="midlle"> 马鞍山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 淮北 </Button> <Button class='btn btn2' type="primary" size="midlle"> 铜陵 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 安庆 </Button> <Button class='btn btn2' type="primary" size="midlle"> 黄山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 滁州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 阜阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 六安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 宣城 </Button> <Button class='btn btn2' type="primary" size="midlle"> 巢湖 </Button> <Button class='btn btn2' type="primary" size="midlle"> 池州 </Button>
+			</div>
+			
+			<!-- 福建省 -->
+			<div id="a4" style="width: 100%;height: 111px;line-height: 36px;">
+				<div class="left">福 建 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 福州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 厦门 </Button> <Button class='btn btn2' type="primary" size="midlle"> 宁德 </Button> <Button class='btn btn2' type="primary" size="midlle"> 莆田 </Button> <Button class='btn btn2' type="primary" size="midlle"> 泉州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 漳州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 龙岩 </Button> <Button class='btn btn2' type="primary" size="midlle"> 三明 </Button> <Button class='btn btn2' type="primary" size="midlle"> 南平 </Button>
+			</div>
+			
+			<!-- 甘肃省 -->
+			<div id="a4" style="width: 100%;height: 149.5px;line-height: 37px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">甘 肃 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 兰州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 嘉峪关 </Button> <Button class='btn btn2' type="primary" size="midlle"> 金昌 </Button> <Button class='btn btn2' type="primary" size="midlle"> 白银 </Button> <Button class='btn btn2' type="primary" size="midlle"> 天水 </Button> <Button class='btn btn2' type="primary" size="midlle"> 酒泉 </Button> <Button class='btn btn2' type="primary" size="midlle"> 张掖 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 武威 </Button> <Button class='btn btn2' type="primary" size="midlle"> 定西 </Button> <Button class='btn btn2' type="primary" size="midlle"> 陇南 </Button> <Button class='btn btn2' type="primary" size="midlle"> 平凉 </Button> <Button class='btn btn2' type="primary" size="midlle"> 庆阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 临夏 </Button> <Button class='btn btn2' type="primary" size="midlle"> 甘南 </Button>
+			</div>
+			
+			<!-- 广东省 -->
+			<div id="a4" style="width: 100%;height: 220px;line-height: 36px;">
+				<div class="left">广 东 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 广州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 韶关 </Button> <Button class='btn btn2' type="primary" size="midlle"> 深圳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 珠海 </Button> <Button class='btn btn2' type="primary" size="midlle"> 汕头 </Button> <Button class='btn btn2' type="primary" size="midlle"> 佛山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 江门 </Button> <Button class='btn btn2' type="primary" size="midlle"> 湛江 </Button> <Button class='btn btn2' type="primary" size="midlle"> 茂名 </Button> <Button class='btn btn2' type="primary" size="midlle"> 肇庆 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 惠州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 梅州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 汕尾 </Button> <Button class='btn btn2' type="primary" size="midlle"> 河源 </Button> <Button class='btn btn2' type="primary" size="midlle"> 阳江 </Button> <Button class='btn btn2' type="primary" size="midlle"> 清远 </Button> <Button class='btn btn2' type="primary" size="midlle"> 东莞 </Button> <Button class='btn btn2' type="primary" size="midlle"> 中山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 潮州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 揭阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 云浮 </Button>
+			</div>
+			
+			<!-- 广西省 -->
+			<div id="a4" style="width: 100%;height: 146px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">广 西 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 南宁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 柳州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 桂林 </Button> <Button class='btn btn2' type="primary" size="midlle"> 梧州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 北海 </Button> <Button class='btn btn2' type="primary" size="midlle"> 防城港 </Button> <Button class='btn btn2' type="primary" size="midlle"> 钦州 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 贵港 </Button> <Button class='btn btn2' type="primary" size="midlle"> 玉林 </Button> <Button class='btn btn2' type="primary" size="midlle"> 崇左 </Button> <Button class='btn btn2' type="primary" size="midlle"> 来宾 </Button> <Button class='btn btn2' type="primary" size="midlle"> 贺州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 百色 </Button> <Button class='btn btn2' type="primary" size="midlle"> 河池 </Button>
+			</div>
+			
+			<!-- 贵州省 -->
+			<div id="a4" style="width: 100%;height: 110px;line-height: 36px;">
+				<div class="left">贵 州 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 贵阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 六盘水 </Button> <Button class='btn btn2' type="primary" size="midlle"> 遵义 </Button> <Button class='btn btn2' type="primary" size="midlle"> 铜仁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 黔西 </Button> <Button class='btn btn2' type="primary" size="midlle"> 毕节 </Button> <Button class='btn btn2' type="primary" size="midlle"> 安顺 </Button> <Button class='btn btn2' type="primary" size="midlle"> 黔东南 </Button> <Button class='btn btn2' type="primary" size="midlle"> 黔南 </Button>
+			</div>
+			
+			<!-- 海南省 -->
+			<div id="a4" style="width: 100%;height: 74px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">海 南 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 省直辖 </Button> <Button class='btn btn2' type="primary" size="midlle"> 海口 </Button> <Button class='btn btn2' type="primary" size="midlle"> 三亚 </Button> <Button class='btn btn2' type="primary" size="midlle"> 儋州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 三沙 </Button>
+			</div>
+			
+			<!-- 河北省 -->
+			<div id="a4" style="width: 100%;height: 110px;line-height: 36px;">
+				<div class="left">河 北 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 石家庄 </Button> <Button class='btn btn2' type="primary" size="midlle"> 唐山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 秦皇岛 </Button> <Button class='btn btn2' type="primary" size="midlle"> 邯郸 </Button> <Button class='btn btn2' type="primary" size="midlle"> 邢台 </Button> <Button class='btn btn2' type="primary" size="midlle"> 保定 </Button> <Button class='btn btn2' type="primary" size="midlle"> 张家口 </Button> <Button class='btn btn2' type="primary" size="midlle"> 承德 </Button> <Button class='btn btn2' type="primary" size="midlle"> 沧州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 廊坊 </Button> <Button class='btn btn2' type="primary" size="midlle"> 衡水 </Button>
+			</div>
+			
+			<!-- 河南省 -->
+			<div id="a4" style="width: 100%;height: 182px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">河 南 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 郑州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 开封 </Button> <Button class='btn btn2' type="primary" size="midlle"> 洛阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 平顶山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 焦作 </Button> <Button class='btn btn2' type="primary" size="midlle"> 鹤壁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 新乡 </Button> <Button class='btn btn2' type="primary" size="midlle"> 安阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 濮阳 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 许昌 </Button> <Button class='btn btn2' type="primary" size="midlle"> 漯河 </Button> <Button class='btn btn2' type="primary" size="midlle"> 三门峡 </Button> <Button class='btn btn2' type="primary" size="midlle"> 南阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 商丘 </Button> <Button class='btn btn2' type="primary" size="midlle"> 信阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 周口 </Button> <Button class='btn btn2' type="primary" size="midlle"> 驻马店 </Button> <Button class='btn btn2' type="primary" size="midlle"> 济源 </Button>
+			</div>
+			
+			<!-- 黑龙江省 -->
+			<div id="a4" style="width: 100%;height: 146px;line-height: 36px;">
+				<div class="left">黑 龙 江 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 哈尔滨 </Button> <Button class='btn btn2' type="primary" size="midlle"> 齐齐哈尔 </Button> <Button class='btn btn2' type="primary" size="midlle"> 牡丹江 </Button> <Button class='btn btn2' type="primary" size="midlle"> 佳木斯 </Button> <Button class='btn btn2' type="primary" size="midlle"> 大庆 </Button> <Button class='btn btn2' type="primary" size="midlle"> 鸡西 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 双鸭山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 伊春 </Button> <Button class='btn btn2' type="primary" size="midlle"> 七台河 </Button> <Button class='btn btn2' type="primary" size="midlle"> 鹤岗 </Button> <Button class='btn btn2' type="primary" size="midlle"> 黑河 </Button> <Button class='btn btn2' type="primary" size="midlle"> 绥化 </Button> <Button class='btn btn2' type="primary" size="midlle"> 大兴安岭 </Button>
+			</div>
+			
+			<!-- 湖北省 -->
+			<div id="a4" style="width: 100%;height: 146px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">湖 北 省</div>
+				<Button class='btn btn2' @click="WH" type="primary" size="midlle"> 武汉 </Button> <Button class='btn btn2' type="primary" size="midlle"> 黄石 </Button> <Button class='btn btn2' type="primary" size="midlle"> 十堰 </Button> <Button class='btn btn2' type="primary" size="midlle"> 宜昌 </Button> <Button class='btn btn2' type="primary" size="midlle"> 襄樊 </Button> <Button class='btn btn2' type="primary" size="midlle"> 襄阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 鄂州 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 荆门 </Button> <Button class='btn btn2' type="primary" size="midlle"> 孝感 </Button> <Button class='btn btn2' type="primary" size="midlle"> 荆州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 黄冈 </Button> <Button class='btn btn2' type="primary" size="midlle"> 咸宁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 随州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 恩施 </Button>
+				<Modal v-model="WuHan" width="700" class-name="vertical-center-modal">
+					<div id="trendWuHan_day" style="height: 200px;width: 670px;"></div>
+					<div id="trendWuHan_month" style="height: 200px;width: 670px;"></div>
+				</Modal>
+			</div>
+			
+			<!-- 湖南省 -->
+			<div id="a4" style="width: 100%;height: 146px;line-height: 36px;">
+				<div class="left">湖 南 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 长沙 </Button> <Button class='btn btn2' type="primary" size="midlle"> 株洲 </Button> <Button class='btn btn2' type="primary" size="midlle"> 湘潭 </Button> <Button class='btn btn2' type="primary" size="midlle"> 衡阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 邵阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 岳阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 常德 </Button> <Button class='btn btn2' type="primary" size="midlle"> 张家界 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 益阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 郴州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 永州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 怀化 </Button> <Button class='btn btn2' type="primary" size="midlle"> 娄底 </Button> <Button class='btn btn2' type="primary" size="midlle"> 湘西 </Button>
+			</div>
+			
+			<!-- 吉林省 -->
+			<div id="a4" style="width: 100%;height: 110px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">吉 林 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 长春 </Button> <Button class='btn btn2' type="primary" size="midlle"> 吉林 </Button> <Button class='btn btn2' type="primary" size="midlle"> 四平 </Button> <Button class='btn btn2' type="primary" size="midlle"> 辽源 </Button> <Button class='btn btn2' type="primary" size="midlle"> 通化 </Button> <Button class='btn btn2' type="primary" size="midlle"> 白山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 松原 </Button> <Button class='btn btn2' type="primary" size="midlle"> 白城 </Button> <Button class='btn btn2' type="primary" size="midlle"> 延边 </Button>
+			</div>
+			
+			<!-- 江苏省 -->
+			<div id="a4" style="width: 100%;height: 146px;line-height: 36px;">
+				<div class="left">江 苏 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 南京 </Button> <Button class='btn btn2' type="primary" size="midlle"> 无锡 </Button> <Button class='btn btn2' type="primary" size="midlle"> 徐州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 常州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 苏州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 南通 </Button> <Button class='btn btn2' type="primary" size="midlle"> 连云港 </Button> <Button class='btn btn2' type="primary" size="midlle"> 淮安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 盐城 </Button> <Button class='btn btn2' type="primary" size="midlle"> 扬州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 镇江 </Button> <Button class='btn btn2' type="primary" size="midlle"> 泰州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 宿迁 </Button>
+			</div>
+			
+			<!-- 江西省 -->
+			<div id="a4" style="width: 100%;height: 110px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">江 西 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 南昌 </Button> <Button class='btn btn2' type="primary" size="midlle"> 景德镇 </Button> <Button class='btn btn2' type="primary" size="midlle"> 萍乡 </Button> <Button class='btn btn2' type="primary" size="midlle"> 九江 </Button> <Button class='btn btn2' type="primary" size="midlle"> 新余 </Button> <Button class='btn btn2' type="primary" size="midlle"> 鹰潭 </Button> <Button class='btn btn2' type="primary" size="midlle"> 赣州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 宜春 </Button> <Button class='btn btn2' type="primary" size="midlle"> 上饶 </Button> <Button class='btn btn2' type="primary" size="midlle"> 吉安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 抚州 </Button>
+			</div>
+			
+			<!-- 辽宁省 -->
+			<div id="a4" style="width: 100%;height: 146px;line-height: 36px;">
+				<div class="left">辽 宁 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 沈阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 大连 </Button> <Button class='btn btn2' type="primary" size="midlle"> 鞍山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 抚顺 </Button> <Button class='btn btn2' type="primary" size="midlle"> 本溪 </Button> <Button class='btn btn2' type="primary" size="midlle"> 丹东 </Button> <Button class='btn btn2' type="primary" size="midlle"> 锦州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 营口 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 阜新 </Button> <Button class='btn btn2' type="primary" size="midlle"> 辽阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 盘锦 </Button> <Button class='btn btn2' type="primary" size="midlle"> 铁岭 </Button> <Button class='btn btn2' type="primary" size="midlle"> 朝阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 葫芦岛 </Button>
+			</div>
+			
+			<!-- 内蒙古 -->
+			<div id="a4" style="width: 100%;height: 110px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">内 蒙 古 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 呼和浩特 </Button> <Button class='btn btn2' type="primary" size="midlle"> 包头 </Button> <Button class='btn btn2' type="primary" size="midlle"> 乌海 </Button> <Button class='btn btn2' type="primary" size="midlle"> 赤峰 </Button> <Button class='btn btn2' type="primary" size="midlle"> 呼伦贝尔 </Button> <Button class='btn btn2' type="primary" size="midlle"> 兴安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 通辽 </Button> <Button class='btn btn2' type="primary" size="midlle"> 锡林郭勒 </Button> <Button class='btn btn2' type="primary" size="midlle"> 乌兰察布 </Button> <Button class='btn btn2' type="primary" size="midlle"> 伊克昭 </Button> <Button class='btn btn2' type="primary" size="midlle"> 巴彦淖尔 </Button> <Button class='btn btn2' type="primary" size="midlle"> 阿拉善 </Button>
+			</div>
+			
+			<!-- 宁夏省 -->
+			<div id="a4" style="width: 100%;height: 74px;line-height: 36px;">
+				<div class="left">宁 夏</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 银川 </Button> <Button class='btn btn2' type="primary" size="midlle"> 石嘴山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 吴忠 </Button> <Button class='btn btn2' type="primary" size="midlle"> 固原 </Button> <Button class='btn btn2' type="primary" size="midlle"> 中卫 </Button>
+			</div>
+			
+			<!-- 青海省 -->
+			<div id="a4" style="width: 100%;height: 74px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">青 海 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 西宁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 海东 </Button> <Button class='btn btn2' type="primary" size="midlle"> 海北 </Button> <Button class='btn btn2' type="primary" size="midlle"> 黄南 </Button> <Button class='btn btn2' type="primary" size="midlle"> 海南 </Button> <Button class='btn btn2' type="primary" size="midlle"> 果洛 </Button> <Button class='btn btn2' type="primary" size="midlle"> 玉树 </Button> <Button class='btn btn2' type="primary" size="midlle"> 海西 </Button>
+			</div>
+			
+			<!-- 山东省 -->
+			<div id="a4" style="width: 100%;height: 182px;line-height: 36px;">
+				<div class="left">山 东 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 济南 </Button> <Button class='btn btn2' type="primary" size="midlle"> 青岛 </Button> <Button class='btn btn2' type="primary" size="midlle"> 淄博 </Button> <Button class='btn btn2' type="primary" size="midlle"> 枣庄 </Button> <Button class='btn btn2' type="primary" size="midlle"> 东营 </Button> <Button class='btn btn2' type="primary" size="midlle"> 烟台 </Button> <Button class='btn btn2' type="primary" size="midlle"> 潍坊 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 济宁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 泰安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 威海 </Button> <Button class='btn btn2' type="primary" size="midlle"> 日照 </Button> <Button class='btn btn2' type="primary" size="midlle"> 莱芜 </Button> <Button class='btn btn2' type="primary" size="midlle"> 临沂 </Button> <Button class='btn btn2' type="primary" size="midlle"> 德州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 聊城 </Button> <Button class='btn btn2' type="primary" size="midlle"> 滨州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 菏泽 </Button>
+			</div>
+			
+			<!-- 山西省 -->
+			<div id="a4" style="width: 100%;height: 110px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">山 西 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 太原 </Button> <Button class='btn btn2' type="primary" size="midlle"> 大同 </Button> <Button class='btn btn2' type="primary" size="midlle"> 阳泉 </Button> <Button class='btn btn2' type="primary" size="midlle"> 长治 </Button> <Button class='btn btn2' type="primary" size="midlle"> 晋城 </Button> <Button class='btn btn2' type="primary" size="midlle"> 朔州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 忻州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 吕梁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 晋中 </Button> <Button class='btn btn2' type="primary" size="midlle"> 临汾 </Button> <Button class='btn btn2' type="primary" size="midlle"> 运城 </Button>
+			</div>
+			
+			<!-- 陕西省 -->
+			<div id="a4" style="width: 100%;height: 110px;line-height: 36px;">
+				<div class="left">陕 西 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 西安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 铜川 </Button> <Button class='btn btn2' type="primary" size="midlle"> 宝鸡 </Button> <Button class='btn btn2' type="primary" size="midlle"> 咸阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 渭南 </Button> <Button class='btn btn2' type="primary" size="midlle"> 延安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 汉中 </Button> <Button class='btn btn2' type="primary" size="midlle"> 安康 </Button> <Button class='btn btn2' type="primary" size="midlle"> 商洛 </Button> <Button class='btn btn2' type="primary" size="midlle"> 榆林 </Button>
+			</div>
+			
+			<!-- 四川省 -->
+			<div id="a4" style="width: 100%;height: 218px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">四 川 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 成都 </Button> <Button class='btn btn2' type="primary" size="midlle"> 自贡 </Button> <Button class='btn btn2' type="primary" size="midlle"> 攀枝花 </Button> <Button class='btn btn2' type="primary" size="midlle"> 泸州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 德阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 绵阳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 广元 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 遂宁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 内江 </Button> <Button class='btn btn2' type="primary" size="midlle"> 乐山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 南充 </Button> <Button class='btn btn2' type="primary" size="midlle"> 宜宾 </Button> <Button class='btn btn2' type="primary" size="midlle"> 广安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 达川 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 雅安 </Button> <Button class='btn btn2' type="primary" size="midlle"> 阿坝 </Button> <Button class='btn btn2' type="primary" size="midlle"> 甘孜 </Button> <Button class='btn btn2' type="primary" size="midlle"> 凉山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 巴中 </Button> <Button class='btn btn2' type="primary" size="midlle"> 眉山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 资阳 </Button>
+			</div>
+			
+			<!-- 西藏省 -->
+			<div id="a4" style="width: 100%;height: 74px;line-height: 36px;">
+				<div class="left">西 藏</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 拉萨 </Button> <Button class='btn btn2' type="primary" size="midlle"> 昌都 </Button> <Button class='btn btn2' type="primary" size="midlle"> 山南 </Button> <Button class='btn btn2' type="primary" size="midlle"> 日喀则 </Button> <Button class='btn btn2' type="primary" size="midlle"> 那曲 </Button> <Button class='btn btn2' type="primary" size="midlle"> 阿里 </Button> <Button class='btn btn2' type="primary" size="midlle"> 林芝 </Button>
+			</div>
+			
+			<!-- 新疆省 -->
+			<div id="a4" style="width: 100%;height: 146px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">新 疆 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 乌鲁木齐 </Button> <Button class='btn btn2' type="primary" size="midlle"> 克拉玛依 </Button> <Button class='btn btn2' type="primary" size="midlle"> 吐鲁番 </Button> <Button class='btn btn2' type="primary" size="midlle"> 哈密 </Button> <Button class='btn btn2' type="primary" size="midlle"> 昌吉 </Button> <Button class='btn btn2' type="primary" size="midlle"> 博尔 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 巴音 </Button> <Button class='btn btn2' type="primary" size="midlle"> 阿克苏 </Button> <Button class='btn btn2' type="primary" size="midlle"> 克孜 </Button> <Button class='btn btn2' type="primary" size="midlle"> 喀什 </Button> <Button class='btn btn2' type="primary" size="midlle"> 和田 </Button> <Button class='btn btn2' type="primary" size="midlle"> 伊犁 </Button> <Button class='btn btn2' type="primary" size="midlle"> 塔城 </Button> <Button class='btn btn2' type="primary" size="midlle"> 阿勒泰 </Button>
+			</div>
+			
+			<!-- 云南省 -->
+			<div id="a4" style="width: 100%;height: 146px;line-height: 36px;">
+				<div class="left">云 南 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 昆明 </Button> <Button class='btn btn2' type="primary" size="midlle"> 曲靖 </Button> <Button class='btn btn2' type="primary" size="midlle"> 玉溪 </Button> <Button class='btn btn2' type="primary" size="midlle"> 昭通 </Button> <Button class='btn btn2' type="primary" size="midlle"> 楚雄 </Button> <Button class='btn btn2' type="primary" size="midlle"> 红河 </Button> <Button class='btn btn2' type="primary" size="midlle"> 文山 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 思茅 </Button> <Button class='btn btn2' type="primary" size="midlle"> 西双版纳 </Button> <Button class='btn btn2' type="primary" size="midlle"> 大理 </Button> <Button class='btn btn2' type="primary" size="midlle"> 保山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 德宏 </Button> <Button class='btn btn2' type="primary" size="midlle"> 丽江 </Button> <Button class='btn btn2' type="primary" size="midlle"> 怒江 </Button> <Button class='btn btn2' type="primary" size="midlle"> 迪庆 </Button> <Button class='btn btn2' type="primary" size="midlle"> 临沧 </Button>
+			</div>
+			
+			<!-- 浙江省 -->
+			<div id="a4" style="width: 100%;height: 110px;line-height: 36px;background-color: rgba(131, 131, 131, 0.25);">
+				<div class="left">浙 江 省</div>
+				<Button class='btn btn2' type="primary" size="midlle"> 杭州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 宁波 </Button> <Button class='btn btn2' type="primary" size="midlle"> 温州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 嘉兴 </Button> <Button class='btn btn2' type="primary" size="midlle"> 湖州 </Button>
+				<Button class='btn btn2' type="primary" size="midlle"> 绍兴 </Button> <Button class='btn btn2' type="primary" size="midlle"> 金华 </Button> <Button class='btn btn2' type="primary" size="midlle"> 衢州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 舟山 </Button> <Button class='btn btn2' type="primary" size="midlle"> 台州 </Button> <Button class='btn btn2' type="primary" size="midlle"> 丽水 </Button>
+			</div>
+		</div>
+		
+		<!-- 地图视图 -->
+		<div style="width: 100%; height: 698px;">
+			<iframe id="rythemMap" src="./ThematicMaps/TimeSlider.html" frameborder="0"></iframe>
+		</div>
+	</div>
+</template>
+<script>
+	import echarts from "echarts";
+	import 'echarts/theme/macarons.js';
+	import 'echarts-wordcloud/dist/echarts-wordcloud.js';
+	import 'echarts-wordcloud/dist/echarts-wordcloud.min.js';
+	import 'echarts/lib/component/dataZoom';
+	export default {
+		data() {
+			return {
+				modDay: false,modMonth:false,BeiJing: false,ShangHai: false,TianJin: false,ChongQing: false,WuHan: false
+			}
+		},
+		methods: {
+			trendMap_Day() {
+				if (!this.trendDay) { this.trendDay = echarts.init(document.getElementById("trendDay")); }
+				this.trendDay.setOption({
+					title: {text: `全国职位发布数量日变化`, left: "center", top: 1, textStyle: { fontSize: 17.5, },},
+					tooltip:{},
+					grid: {left: "1%", right: "3%", bottom: "10%", top: "25%", containLabel: true,},
+					dataZoom: [
+						{type: 'slider', show: true, height: 20, left: '10%', right: '10%', bottom: '-0.5%', start: 0, end: 15, textStyle: { color: '#d4ffff',fontSize: 11 }},
+						{ type: 'inside' },
+					],
+					xAxis: {
+						type: 'category', boundaryGap: false,
+						data: [
+							'2020/3/1', '2020/3/2', '2020/3/3', '2020/3/4', '2020/3/5', '2020/3/6', '2020/3/7', '2020/3/8', '2020/3/9', '2020/3/10', '2020/3/11', '2020/3/12', '2020/3/13', '2020/3/14', '2020/3/15', '2020/3/16', '2020/3/17', '2020/3/18', '2020/3/19', '2020/3/20', '2020/3/21', '2020/3/22', '2020/3/23', '2020/3/24', '2020/3/25', '2020/3/26', '2020/3/27', '2020/3/28', '2020/3/29', '2020/3/30', '2020/3/31','2020/4/1', '2020/4/2', '2020/4/3', '2020/4/4', '2020/4/5', '2020/4/6', '2020/4/7', '2020/4/8', '2020/4/9', '2020/4/10', '2020/4/11', '2020/4/12', '2020/4/13', '2020/4/14', '2020/4/15', '2020/4/16', '2020/4/17', '2020/4/18', '2020/4/19', '2020/4/20', '2020/4/21', '2020/4/22', '2020/4/23', '2020/4/24', '2020/4/25', '2020/4/26', '2020/4/27', '2020/4/28', '2020/4/29', '2020/4/30',
+							'2020/5/1', '2020/5/2', '2020/5/3', '2020/5/4', '2020/5/5', '2020/5/6', '2020/5/7', '2020/5/8', '2020/5/9', '2020/5/10', '2020/5/11', '2020/5/12', '2020/5/13', '2020/5/14', '2020/5/15', '2020/5/16', '2020/5/17', '2020/5/18', '2020/5/19', '2020/5/20', '2020/5/21', '2020/5/22', '2020/5/23', '2020/5/24', '2020/5/25', '2020/5/26', '2020/5/27', '2020/5/28', '2020/5/29', '2020/5/30', '2020/5/31','2020/6/1', '2020/6/2', '2020/6/3', '2020/6/4', '2020/6/5', '2020/6/6', '2020/6/7', '2020/6/8', '2020/6/9', '2020/6/10', '2020/6/11', '2020/6/12', '2020/6/13', '2020/6/14', '2020/6/15', '2020/6/16', '2020/6/17', '2020/6/18', '2020/6/19', '2020/6/20', '2020/6/21', '2020/6/22', '2020/6/23', '2020/6/24', '2020/6/25', '2020/6/26', '2020/6/27', '2020/6/28', '2020/6/29', '2020/6/30',
+							'2020/7/1', '2020/7/2', '2020/7/3', '2020/7/4', '2020/7/5', '2020/7/6', '2020/7/7', '2020/7/8', '2020/7/9', '2020/7/10', '2020/7/11', '2020/7/12', '2020/7/13', '2020/7/14', '2020/7/15', '2020/7/16', '2020/7/17', '2020/7/18', '2020/7/19', '2020/7/20', '2020/7/21', '2020/7/22', '2020/7/23', '2020/7/24', '2020/7/25', '2020/7/26', '2020/7/27', '2020/7/28', '2020/7/29', '2020/7/30', '2020/7/31','2020/8/1', '2020/8/2', '2020/8/3', '2020/8/4', '2020/8/5', '2020/8/6', '2020/8/7', '2020/8/8', '2020/8/9', '2020/8/10', '2020/8/11', '2020/8/12', '2020/8/13', '2020/8/14', '2020/8/15', '2020/8/16', '2020/8/17', '2020/8/18', '2020/8/19', '2020/8/20', '2020/8/21', '2020/8/22', '2020/8/23', '2020/8/24', '2020/8/25', '2020/8/26', '2020/8/27', '2020/8/28', '2020/8/29', '2020/8/30', '2020/8/31',
+							'2020/9/1', '2020/9/2', '2020/9/3', '2020/9/4', '2020/9/5', '2020/9/6', '2020/9/7', '2020/9/8', '2020/9/9', '2020/9/10', '2020/9/11', '2020/9/12', '2020/9/13', '2020/9/14', '2020/9/15', '2020/9/16', '2020/9/17', '2020/9/18', '2020/9/19', '2020/9/20', '2020/9/21', '2020/9/22', '2020/9/23', '2020/9/24', '2020/9/25', '2020/9/26', '2020/9/27', '2020/9/28', '2020/9/29', '2020/9/30','2020/10/1', '2020/10/2', '2020/10/3', '2020/10/4', '2020/10/5', '2020/10/6', '2020/10/7', '2020/10/8', '2020/10/9', '2020/10/10', '2020/10/11', '2020/10/12', '2020/10/13', '2020/10/14', '2020/10/15', '2020/10/16', '2020/10/17', '2020/10/18', '2020/10/19', '2020/10/20', '2020/10/21', '2020/10/22', '2020/10/23', '2020/10/24', '2020/10/25', '2020/10/26', '2020/10/27', '2020/10/28', '2020/10/29', '2020/10/30', '2020/10/31',
+							'2020/11/1', '2020/11/2', '2020/11/3', '2020/11/4', '2020/11/5', '2020/11/6', '2020/11/7', '2020/11/8', '2020/11/9', '2020/11/10', '2020/11/11', '2020/11/12', '2020/11/13', '2020/11/14', '2020/11/15', '2020/11/16', '2020/11/17', '2020/11/18', '2020/11/19', '2020/11/20', '2020/11/21', '2020/11/22', '2020/11/23', '2020/11/24', '2020/11/25', '2020/11/26', '2020/11/27', '2020/11/28', '2020/11/29', '2020/11/30','2020/12/1', '2020/12/2', '2020/12/3', '2020/12/4', '2020/12/5', '2020/12/6', '2020/12/7', '2020/12/8', '2020/12/9', '2020/12/10', '2020/12/11', '2020/12/12', '2020/12/13', '2020/12/14', '2020/12/15', '2020/12/16', '2020/12/17', '2020/12/18', '2020/12/19', '2020/12/20', '2020/12/21', '2020/12/22', '2020/12/23', '2020/12/24', '2020/12/25', '2020/12/26', '2020/12/27', '2020/12/28', '2020/12/29', '2020/12/30', '2020/12/31'
+						]
+					},
+					yAxis: { type: 'value' },
+					series: [{
+						data: [
+							13, 13, 11, 16, 15, 14, 15, 13, 14, 18, 11, 26, 20, 13, 13, 24, 30, 10, 13, 19, 14, 11, 12, 9, 22, 29, 38, 10, 6, 14, 23, 20, 29, 24, 14, 12, 16, 13, 23, 18, 15, 12, 17, 52, 41, 22, 50, 44, 15, 13, 65, 75, 68, 42, 99, 15, 115, 173, 215, 385, 1087, 126, 404, 50, 36, 38, 71, 166, 215, 74, 72, 16, 28, 21, 18, 22, 14, 13, 9, 9, 6, 9, 6, 8, 5, 7, 7, 10, 13, 11, 15, 9, 12, 14, 5, 8, 6, 8, 9, 13, 8, 8, 8, 5, 8, 6, 7, 7, 8, 8, 8, 3, 2, 4, 4, 12, 1, 5, 3, 10, 7, 8, 3, 9, 6, 44, 8, 19, 28, 15, 21, 19, 7, 8, 12, 4, 11, 3, 24, 4, 6, 6, 9, 12, 23, 33, 7, 5, 15, 19, 10, 27, 35, 8,
+							13, 37, 34, 29, 47, 61, 14, 17, 58, 63, 75, 80, 131, 43, 18, 389, 366, 1412, 361, 76, 6, 12, 8, 8, 11, 8, 7, 7, 7, 12, 12, 10, 9, 7, 10, 9, 9, 10, 7, 7, 8, 9, 8, 8, 7, 7, 10, 8, 10, 5, 8, 7, 8, 6, 5, 8, 8, 7, 9, 10, 3, 3, 3, 2, 3, 2, 2, 5, 34, 6, 3, 12, 30, 13, 11, 29, 8, 12, 16, 7, 11, 46, 22, 10, 6, 12, 14, 6, 25, 23, 7, 14, 23, 24, 29, 21, 17, 13, 8, 24, 40, 30, 51, 20, 12, 9, 29, 34, 36, 27, 103, 15, 14, 105, 25, 88, 66, 76, 39, 35, 234, 36, 19, 16, 26, 16, 26, 33, 69, 33, 55, 97, 12, 9, 38, 31, 39, 179, 76, 32, 31, 114, 134, 216, 110, 369, 55, 104, 1854, 335, 666, 1237
+						],
+						type: 'line', symbolSize: 5, areaStyle: {}
+					}]
+				});
+			},
+			trendMap_Month() {
+				if (!this.trendMonth) { this.trendMonth = echarts.init(document.getElementById("trendMonth")); }
+				this.trendMonth.setOption({
+					title: {
+						text: `全国职位发布数量月变化`, left: "center", top: 1, textStyle: { fontSize: 17.5, },
+					},
+					tooltip:{},
+					grid: {left: "1%", right: "3%", bottom: "5%", top: "25%", containLabel: true,},
+					xAxis: {
+						type: 'category', boundaryGap: false,
+						data:['1月', '2月','3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+					},
+					yAxis: { type: 'value' },
+					series: [{
+						data: [0, 0, 509, 2789, 1508, 215, 452, 3349, 246, 386, 1261, 6067],
+						type: 'line', symbolSize: 10, areaStyle: {}
+					}]
+				});
+			},
+			
+			trendBJ_day() {
+				if (!this.trendBeiJing_day) { this.trendBeiJing_day = echarts.init(document.getElementById("trendBeiJing_day")); }
+				this.trendBeiJing_day.setOption({
+					title: {text: `北京职位发布数量日变化`, left: "center", top: '2.5%', textStyle: { fontSize: 17.5, },},
+					tooltip:{},
+					grid: {left: "1%", right: "3%", bottom: "10%", top: "20%", containLabel: true,},
+					dataZoom: [
+						{ type: 'slider', show: true, height: 20, left: '10%', right: '10%', bottom: '-0.5%', start: 0, end: 15, textStyle: { color: '#d4ffff',fontSize: 11 } },
+						{ type: 'inside' },
+					],
+					xAxis: {
+						type: 'category', boundaryGap: false,
+						data: [
+							'2020/3/1', '2020/3/2', '2020/3/3', '2020/3/4', '2020/3/5', '2020/3/6', '2020/3/7', '2020/3/8', '2020/3/9', '2020/3/10', '2020/3/11', '2020/3/12', '2020/3/13', '2020/3/14', '2020/3/15', '2020/3/16', '2020/3/17', '2020/3/18', '2020/3/19', '2020/3/20', '2020/3/21', '2020/3/22', '2020/3/23', '2020/3/24', '2020/3/25', '2020/3/26', '2020/3/27', '2020/3/28', '2020/3/29', '2020/3/30', '2020/3/31', '2020/4/1', '2020/4/2', '2020/4/3', '2020/4/4', '2020/4/5', '2020/4/6', '2020/4/7', '2020/4/8', '2020/4/9', '2020/4/10', '2020/4/11', '2020/4/12', '2020/4/13', '2020/4/14', '2020/4/15', '2020/4/16', '2020/4/17', '2020/4/18', '2020/4/19', '2020/4/20', '2020/4/21', '2020/4/22', '2020/4/23', '2020/4/24', '2020/4/25', '2020/4/26', '2020/4/27', '2020/4/28', '2020/4/29', '2020/4/30', 
+							'2020/5/1', '2020/5/2', '2020/5/3', '2020/5/4', '2020/5/5', '2020/5/6', '2020/5/7', '2020/5/8', '2020/5/9', '2020/5/10', '2020/5/11', '2020/5/12', '2020/5/13', '2020/5/14', '2020/5/15', '2020/5/16', '2020/5/17', '2020/5/18', '2020/5/19', '2020/5/20', '2020/5/21', '2020/5/22', '2020/5/23', '2020/5/24', '2020/5/25', '2020/5/26', '2020/5/27', '2020/5/28', '2020/5/29', '2020/5/30', '2020/5/31', '2020/6/1', '2020/6/2', '2020/6/3', '2020/6/4', '2020/6/5', '2020/6/6', '2020/6/7', '2020/6/8', '2020/6/9', '2020/6/10', '2020/6/11', '2020/6/12', '2020/6/13', '2020/6/14', '2020/6/15', '2020/6/16', '2020/6/17', '2020/6/18', '2020/6/19', '2020/6/20', '2020/6/21', '2020/6/22', '2020/6/23', '2020/6/24', '2020/6/25', '2020/6/26', '2020/6/27', '2020/6/28', '2020/6/29', '2020/6/30', 
+							'2020/7/1', '2020/7/2', '2020/7/3', '2020/7/4', '2020/7/5', '2020/7/6', '2020/7/7', '2020/7/8', '2020/7/9', '2020/7/10', '2020/7/11', '2020/7/12', '2020/7/13', '2020/7/14', '2020/7/15', '2020/7/16', '2020/7/17', '2020/7/18', '2020/7/19', '2020/7/20', '2020/7/21', '2020/7/22', '2020/7/23', '2020/7/24', '2020/7/25', '2020/7/26', '2020/7/27', '2020/7/28', '2020/7/29', '2020/7/30', '2020/7/31', '2020/8/1', '2020/8/2', '2020/8/3', '2020/8/4', '2020/8/5', '2020/8/6', '2020/8/7', '2020/8/8', '2020/8/9', '2020/8/10', '2020/8/11', '2020/8/12', '2020/8/13', '2020/8/14', '2020/8/15', '2020/8/16', '2020/8/17', '2020/8/18', '2020/8/19', '2020/8/20', '2020/8/21', '2020/8/22', '2020/8/23', '2020/8/24', '2020/8/25', '2020/8/26', '2020/8/27', '2020/8/28', '2020/8/29', '2020/8/30', '2020/8/31', 
+							'2020/9/1', '2020/9/2', '2020/9/3', '2020/9/4', '2020/9/5', '2020/9/6', '2020/9/7', '2020/9/8', '2020/9/9', '2020/9/10', '2020/9/11', '2020/9/12', '2020/9/13', '2020/9/14', '2020/9/15', '2020/9/16', '2020/9/17', '2020/9/18', '2020/9/19', '2020/9/20', '2020/9/21', '2020/9/22', '2020/9/23', '2020/9/24', '2020/9/25', '2020/9/26', '2020/9/27', '2020/9/28', '2020/9/29', '2020/9/30', '2020/10/1', '2020/10/2', '2020/10/3', '2020/10/4', '2020/10/5', '2020/10/6', '2020/10/7', '2020/10/8', '2020/10/9', '2020/10/10', '2020/10/11', '2020/10/12', '2020/10/13', '2020/10/14', '2020/10/15', '2020/10/16', '2020/10/17', '2020/10/18', '2020/10/19', '2020/10/20', '2020/10/21', '2020/10/22', '2020/10/23', '2020/10/24', '2020/10/25', '2020/10/26', '2020/10/27', '2020/10/28', '2020/10/29', '2020/10/30', '2020/10/31', 
+							'2020/11/1', '2020/11/2', '2020/11/3', '2020/11/4', '2020/11/5', '2020/11/6', '2020/11/7', '2020/11/8', '2020/11/9', '2020/11/10', '2020/11/11', '2020/11/12', '2020/11/13', '2020/11/14', '2020/11/15', '2020/11/16', '2020/11/17', '2020/11/18', '2020/11/19', '2020/11/20', '2020/11/21', '2020/11/22', '2020/11/23', '2020/11/24', '2020/11/25', '2020/11/26', '2020/11/27', '2020/11/28', '2020/11/29', '2020/11/30', '2020/12/1', '2020/12/2', '2020/12/3', '2020/12/4', '2020/12/5', '2020/12/6', '2020/12/7', '2020/12/8', '2020/12/9', '2020/12/10', '2020/12/11', '2020/12/12', '2020/12/13', '2020/12/14', '2020/12/15', '2020/12/16', '2020/12/17', '2020/12/18', '2020/12/19', '2020/12/20', '2020/12/21', '2020/12/22', '2020/12/23', '2020/12/24', '2020/12/25', '2020/12/26', '2020/12/27', '2020/12/28', '2020/12/29', '2020/12/30', '2020/12/31'
+						],
+					},
+					yAxis: { type: 'value' },
+					series: [{
+						data: [0, 5, 11, 16, 15, 14, 15, 13, 14, 18, 11, 26, 20, 13, 13, 24, 30, 10, 13, 19, 14, 11, 11, 9, 22, 29, 38, 10, 6, 14, 23, 20, 28, 24, 14, 12, 16, 13, 23, 18, 15, 12, 17, 51, 41, 22, 50, 44, 15, 13, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 1, 6, 0, 4, 2, 7, 2, 12, 9, 1, 1, 4, 0, 5, 15, 6, 1, 2, 9, 13, 15, 14, 32, 6, 3, 185, 34, 46, 124],
+						type: 'line', symbolSize: 5, areaStyle: {}
+					}]
+				});
+			},
+			trendBJ_month() {
+				if (!this.trendBeiJing_month) {
+					this.trendBeiJing_month = echarts.init(document.getElementById("trendBeiJing_month"));
+				}
+				this.trendBeiJing_month.setOption({
+					title: {text: `北京职位发布数量月变化`, left: "center", top: 15, textStyle: { fontSize: 17.5, },},
+					tooltip:{},
+					grid: {left: "1%", right: "3%", bottom: "1%", top: "26%", containLabel: true,},
+					xAxis: {
+						type: 'category', boundaryGap: false,
+						data:['1月', '2月','3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+					},
+					yAxis: { type: 'value' },
+					series: [{
+						data: [0,0,446, 475, 68, 8, 15, 112,0, 20, 34, 566],
+						type: 'line', symbolSize: 10, areaStyle: {}
+					}]
+				});
+			},
+			
+			trendSH_day() {
+				if (!this.trendShangHai_day) {
+					this.trendShangHai_day = echarts.init(document.getElementById("trendShangHai_day"));
+				}
+				this.trendShangHai_day.setOption({
+					title: {text: `上海职位发布数量日变化`, left: "center", top: '2.5%', textStyle: { fontSize: 17.5, },},
+					tooltip:{},
+					grid: {left: "1%", right: "3%", bottom: "10%", top: "20%", containLabel: true,},
+					dataZoom: [
+						{ type: 'slider', show: true, height: 20, left: '10%', right: '10%', bottom: '-0.5%', start: 0, end: 15, textStyle: { color: '#d4ffff',fontSize: 11 } },
+						{ type: 'inside' },
+					],
+					xAxis: {
+						type: 'category', boundaryGap: false,
+						data: [
+							'2020/3/1', '2020/3/2', '2020/3/3', '2020/3/4', '2020/3/5', '2020/3/6', '2020/3/7', '2020/3/8', '2020/3/9', '2020/3/10', '2020/3/11', '2020/3/12', '2020/3/13', '2020/3/14', '2020/3/15', '2020/3/16', '2020/3/17', '2020/3/18', '2020/3/19', '2020/3/20', '2020/3/21', '2020/3/22', '2020/3/23', '2020/3/24', '2020/3/25', '2020/3/26', '2020/3/27', '2020/3/28', '2020/3/29', '2020/3/30', '2020/3/31', '2020/4/1', '2020/4/2', '2020/4/3', '2020/4/4', '2020/4/5', '2020/4/6', '2020/4/7', '2020/4/8', '2020/4/9', '2020/4/10', '2020/4/11', '2020/4/12', '2020/4/13', '2020/4/14', '2020/4/15', '2020/4/16', '2020/4/17', '2020/4/18', '2020/4/19', '2020/4/20', '2020/4/21', '2020/4/22', '2020/4/23', '2020/4/24', '2020/4/25', '2020/4/26', '2020/4/27', '2020/4/28', '2020/4/29', '2020/4/30', 
+							'2020/5/1', '2020/5/2', '2020/5/3', '2020/5/4', '2020/5/5', '2020/5/6', '2020/5/7', '2020/5/8', '2020/5/9', '2020/5/10', '2020/5/11', '2020/5/12', '2020/5/13', '2020/5/14', '2020/5/15', '2020/5/16', '2020/5/17', '2020/5/18', '2020/5/19', '2020/5/20', '2020/5/21', '2020/5/22', '2020/5/23', '2020/5/24', '2020/5/25', '2020/5/26', '2020/5/27', '2020/5/28', '2020/5/29', '2020/5/30', '2020/5/31', '2020/6/1', '2020/6/2', '2020/6/3', '2020/6/4', '2020/6/5', '2020/6/6', '2020/6/7', '2020/6/8', '2020/6/9', '2020/6/10', '2020/6/11', '2020/6/12', '2020/6/13', '2020/6/14', '2020/6/15', '2020/6/16', '2020/6/17', '2020/6/18', '2020/6/19', '2020/6/20', '2020/6/21', '2020/6/22', '2020/6/23', '2020/6/24', '2020/6/25', '2020/6/26', '2020/6/27', '2020/6/28', '2020/6/29', '2020/6/30', 
+							'2020/7/1', '2020/7/2', '2020/7/3', '2020/7/4', '2020/7/5', '2020/7/6', '2020/7/7', '2020/7/8', '2020/7/9', '2020/7/10', '2020/7/11', '2020/7/12', '2020/7/13', '2020/7/14', '2020/7/15', '2020/7/16', '2020/7/17', '2020/7/18', '2020/7/19', '2020/7/20', '2020/7/21', '2020/7/22', '2020/7/23', '2020/7/24', '2020/7/25', '2020/7/26', '2020/7/27', '2020/7/28', '2020/7/29', '2020/7/30', '2020/7/31', '2020/8/1', '2020/8/2', '2020/8/3', '2020/8/4', '2020/8/5', '2020/8/6', '2020/8/7', '2020/8/8', '2020/8/9', '2020/8/10', '2020/8/11', '2020/8/12', '2020/8/13', '2020/8/14', '2020/8/15', '2020/8/16', '2020/8/17', '2020/8/18', '2020/8/19', '2020/8/20', '2020/8/21', '2020/8/22', '2020/8/23', '2020/8/24', '2020/8/25', '2020/8/26', '2020/8/27', '2020/8/28', '2020/8/29', '2020/8/30', '2020/8/31', 
+							'2020/9/1', '2020/9/2', '2020/9/3', '2020/9/4', '2020/9/5', '2020/9/6', '2020/9/7', '2020/9/8', '2020/9/9', '2020/9/10', '2020/9/11', '2020/9/12', '2020/9/13', '2020/9/14', '2020/9/15', '2020/9/16', '2020/9/17', '2020/9/18', '2020/9/19', '2020/9/20', '2020/9/21', '2020/9/22', '2020/9/23', '2020/9/24', '2020/9/25', '2020/9/26', '2020/9/27', '2020/9/28', '2020/9/29', '2020/9/30', '2020/10/1', '2020/10/2', '2020/10/3', '2020/10/4', '2020/10/5', '2020/10/6', '2020/10/7', '2020/10/8', '2020/10/9', '2020/10/10', '2020/10/11', '2020/10/12', '2020/10/13', '2020/10/14', '2020/10/15', '2020/10/16', '2020/10/17', '2020/10/18', '2020/10/19', '2020/10/20', '2020/10/21', '2020/10/22', '2020/10/23', '2020/10/24', '2020/10/25', '2020/10/26', '2020/10/27', '2020/10/28', '2020/10/29', '2020/10/30', '2020/10/31', 
+							'2020/11/1', '2020/11/2', '2020/11/3', '2020/11/4', '2020/11/5', '2020/11/6', '2020/11/7', '2020/11/8', '2020/11/9', '2020/11/10', '2020/11/11', '2020/11/12', '2020/11/13', '2020/11/14', '2020/11/15', '2020/11/16', '2020/11/17', '2020/11/18', '2020/11/19', '2020/11/20', '2020/11/21', '2020/11/22', '2020/11/23', '2020/11/24', '2020/11/25', '2020/11/26', '2020/11/27', '2020/11/28', '2020/11/29', '2020/11/30', '2020/12/1', '2020/12/2', '2020/12/3', '2020/12/4', '2020/12/5', '2020/12/6', '2020/12/7', '2020/12/8', '2020/12/9', '2020/12/10', '2020/12/11', '2020/12/12', '2020/12/13', '2020/12/14', '2020/12/15', '2020/12/16', '2020/12/17', '2020/12/18', '2020/12/19', '2020/12/20', '2020/12/21', '2020/12/22', '2020/12/23', '2020/12/24', '2020/12/25', '2020/12/26', '2020/12/27', '2020/12/28', '2020/12/29', '2020/12/30', '2020/12/31'
+						]
+					},
+					yAxis: { type: 'value' },
+					series: [{
+						data: [
+							13, 13, 11, 16, 15, 14, 15, 13, 14, 18, 11, 26, 20, 13, 13, 24, 30, 10, 13, 19, 14, 11, 12, 9, 22, 29, 38, 10, 6, 14, 23, 20, 29, 24, 14, 12, 16, 13, 23, 18, 15, 12, 17, 52, 41, 22, 50, 44, 15, 13, 65, 75, 68, 42, 99, 15, 115, 173, 215, 385, 1087, 126, 404, 50, 36, 38, 71, 166, 215, 74, 72, 16, 28, 21, 18, 22, 14, 13, 9, 9, 6, 9, 6, 8, 5, 7, 7, 10, 13, 11, 15, 9, 12, 14, 5, 8, 6, 8, 9, 13, 8, 8, 8, 5, 8, 6, 7, 7, 8, 8, 8, 3, 2, 4, 4, 12, 1, 5, 3, 10, 7, 8, 3, 9, 6, 44, 8, 19, 28, 15, 21, 19, 7, 8, 12, 4, 11, 3, 24, 4, 6, 6, 9, 12, 23, 33, 7, 5, 15, 19, 10, 27, 35, 8, 13, 
+							37, 34, 29, 47,61, 14, 17, 58, 63, 75, 80, 131, 43, 18, 389, 366, 1412,361, 76, 6, 12, 8, 8, 11, 8, 7, 7, 7, 12, 12, 10, 9, 7, 10, 9, 9, 10, 7, 7, 8, 9, 8, 8, 7, 7, 10, 8, 10, 5, 8, 7, 8, 6, 5, 8, 8, 7, 9, 10, 3, 3, 3, 2, 3, 2, 2, 5, 34, 6, 3, 12, 30, 13, 11, 29, 8, 12, 16, 7, 11, 46, 22, 10, 6, 12, 14, 6, 25, 23, 7, 14, 23, 24, 29, 21, 17, 13, 8, 24, 40, 30, 51, 20, 12, 9, 29, 34, 36, 27, 103, 15, 14, 105, 25, 88, 66, 76, 39, 35, 234, 36, 19, 16, 26, 16, 26, 33, 69, 33, 55, 97, 12, 9, 38, 31, 39, 179, 76, 32, 31, 114, 134, 216, 110, 369, 55, 104, 1854, 335, 666, 1237
+						],
+						type: 'line', symbolSize: 5, areaStyle: {}
+					}]
+				});
+			},
+			trendSH_month() {
+				if (!this.trendShangHai_month) {
+					this.trendShangHai_month = echarts.init(document.getElementById("trendShangHai_month"));
+				}
+				this.trendShangHai_month.setOption({
+					title: {
+						text: `上海职位发布数量月变化`, left: "center", top: 15, textStyle: { fontSize: 17.5, },
+					},
+					tooltip:{},
+					grid: {
+						left: "1%", right: "3%", bottom: "1%", top: "26%", containLabel: true,
+					},
+					xAxis: {
+						type: 'category', boundaryGap: false,
+						data:['1月', '2月','3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+					},
+					yAxis: { type: 'value' },
+					series: [{
+						data: [0, 0, 6, 38, 35, 12, 10, 817, 0, 6, 25, 478],
+						type: 'line', symbolSize: 10, areaStyle: {}
+					}]
+				});
+			},
+			
+			trendWH_day() {
+				if (!this.trendWuHan_day) {
+					this.trendWuHan_day = echarts.init(document.getElementById("trendWuHan_day"));
+				}
+				this.trendWuHan_day.setOption({
+					title: {text: `武汉职位发布数量日变化`, left: "center", top: '2.5%', textStyle: { fontSize: 17.5, },},
+					tooltip:{},
+					grid: {left: "1%", right: "3%", bottom: "10%", top: "20%", containLabel: true,},
+					dataZoom: [
+						{ type: 'slider', show: true, height: 20, left: '10%', right: '10%', bottom: '-0.5%', start: 0, end: 15, textStyle: { color: '#d4ffff',fontSize: 11 } },
+						{ type: 'inside' },
+					],
+					xAxis: {
+						type: 'category', boundaryGap: false,
+						data: [
+							'2020/3/1', '2020/3/2', '2020/3/3', '2020/3/4', '2020/3/5', '2020/3/6', '2020/3/7', '2020/3/8', '2020/3/9', '2020/3/10', '2020/3/11', '2020/3/12', '2020/3/13', '2020/3/14', '2020/3/15', '2020/3/16', '2020/3/17', '2020/3/18', '2020/3/19', '2020/3/20', '2020/3/21', '2020/3/22', '2020/3/23', '2020/3/24', '2020/3/25', '2020/3/26', '2020/3/27', '2020/3/28', '2020/3/29', '2020/3/30', '2020/3/31', '2020/4/1', '2020/4/2', '2020/4/3', '2020/4/4', '2020/4/5', '2020/4/6', '2020/4/7', '2020/4/8', '2020/4/9', '2020/4/10', '2020/4/11', '2020/4/12', '2020/4/13', '2020/4/14', '2020/4/15', '2020/4/16', '2020/4/17', '2020/4/18', '2020/4/19', '2020/4/20', '2020/4/21', '2020/4/22', '2020/4/23', '2020/4/24', '2020/4/25', '2020/4/26', '2020/4/27', '2020/4/28', '2020/4/29', '2020/4/30', 
+							'2020/5/1', '2020/5/2', '2020/5/3', '2020/5/4', '2020/5/5', '2020/5/6', '2020/5/7', '2020/5/8', '2020/5/9', '2020/5/10', '2020/5/11', '2020/5/12', '2020/5/13', '2020/5/14', '2020/5/15', '2020/5/16', '2020/5/17', '2020/5/18', '2020/5/19', '2020/5/20', '2020/5/21', '2020/5/22', '2020/5/23', '2020/5/24', '2020/5/25', '2020/5/26', '2020/5/27', '2020/5/28', '2020/5/29', '2020/5/30', '2020/5/31', '2020/6/1', '2020/6/2', '2020/6/3', '2020/6/4', '2020/6/5', '2020/6/6', '2020/6/7', '2020/6/8', '2020/6/9', '2020/6/10', '2020/6/11', '2020/6/12', '2020/6/13', '2020/6/14', '2020/6/15', '2020/6/16', '2020/6/17', '2020/6/18', '2020/6/19', '2020/6/20', '2020/6/21', '2020/6/22', '2020/6/23', '2020/6/24', '2020/6/25', '2020/6/26', '2020/6/27', '2020/6/28', '2020/6/29', '2020/6/30', 
+							'2020/7/1', '2020/7/2', '2020/7/3', '2020/7/4', '2020/7/5', '2020/7/6', '2020/7/7', '2020/7/8', '2020/7/9', '2020/7/10', '2020/7/11', '2020/7/12', '2020/7/13', '2020/7/14', '2020/7/15', '2020/7/16', '2020/7/17', '2020/7/18', '2020/7/19', '2020/7/20', '2020/7/21', '2020/7/22', '2020/7/23', '2020/7/24', '2020/7/25', '2020/7/26', '2020/7/27', '2020/7/28', '2020/7/29', '2020/7/30', '2020/7/31', '2020/8/1', '2020/8/2', '2020/8/3', '2020/8/4', '2020/8/5', '2020/8/6', '2020/8/7', '2020/8/8', '2020/8/9', '2020/8/10', '2020/8/11', '2020/8/12', '2020/8/13', '2020/8/14', '2020/8/15', '2020/8/16', '2020/8/17', '2020/8/18', '2020/8/19', '2020/8/20', '2020/8/21', '2020/8/22', '2020/8/23', '2020/8/24', '2020/8/25', '2020/8/26', '2020/8/27', '2020/8/28', '2020/8/29', '2020/8/30', '2020/8/31', 
+							'2020/9/1', '2020/9/2', '2020/9/3', '2020/9/4', '2020/9/5', '2020/9/6', '2020/9/7', '2020/9/8', '2020/9/9', '2020/9/10', '2020/9/11', '2020/9/12', '2020/9/13', '2020/9/14', '2020/9/15', '2020/9/16', '2020/9/17', '2020/9/18', '2020/9/19', '2020/9/20', '2020/9/21', '2020/9/22', '2020/9/23', '2020/9/24', '2020/9/25', '2020/9/26', '2020/9/27', '2020/9/28', '2020/9/29', '2020/9/30', '2020/10/1', '2020/10/2', '2020/10/3', '2020/10/4', '2020/10/5', '2020/10/6', '2020/10/7', '2020/10/8', '2020/10/9', '2020/10/10', '2020/10/11', '2020/10/12', '2020/10/13', '2020/10/14', '2020/10/15', '2020/10/16', '2020/10/17', '2020/10/18', '2020/10/19', '2020/10/20', '2020/10/21', '2020/10/22', '2020/10/23', '2020/10/24', '2020/10/25', '2020/10/26', '2020/10/27', '2020/10/28', '2020/10/29', '2020/10/30', '2020/10/31', 
+							'2020/11/1', '2020/11/2', '2020/11/3', '2020/11/4', '2020/11/5', '2020/11/6', '2020/11/7', '2020/11/8', '2020/11/9', '2020/11/10', '2020/11/11', '2020/11/12', '2020/11/13', '2020/11/14', '2020/11/15', '2020/11/16', '2020/11/17', '2020/11/18', '2020/11/19', '2020/11/20', '2020/11/21', '2020/11/22', '2020/11/23', '2020/11/24', '2020/11/25', '2020/11/26', '2020/11/27', '2020/11/28', '2020/11/29', '2020/11/30', '2020/12/1', '2020/12/2', '2020/12/3', '2020/12/4', '2020/12/5', '2020/12/6', '2020/12/7', '2020/12/8', '2020/12/9', '2020/12/10', '2020/12/11', '2020/12/12', '2020/12/13', '2020/12/14', '2020/12/15', '2020/12/16', '2020/12/17', '2020/12/18', '2020/12/19', '2020/12/20', '2020/12/21', '2020/12/22', '2020/12/23', '2020/12/24', '2020/12/25', '2020/12/26', '2020/12/27', '2020/12/28', '2020/12/29', '2020/12/30', '2020/12/31'
+						]
+					},
+					yAxis: { type: 'value' },
+					series: [{
+						data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 10, 2, 4, 0, 1, 0, 1, 1, 6, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 2, 384, 299, 6, 6, 10, 5, 7, 8, 8, 6, 4, 7, 9, 5, 10, 9, 7, 10, 9, 9, 10, 7, 7, 8, 9, 8, 8, 7, 7, 10, 8, 10, 5, 8, 7, 8, 6, 5, 8, 8, 7, 8, 8, 3, 3, 3, 2, 3, 2, 2, 5, 30, 2, 2, 10, 28, 10, 8, 23, 8, 12, 16, 7, 10, 12, 0, 2, 1, 0, 0, 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 9, 0, 2, 1, 2, 4, 4, 7, 6, 0, 13, 1, 0, 7, 4, 3, 13, 8, 4, 2, 6, 8, 17, 5, 77, 12, 5, 316, 37, 78, 225],
+						type: 'line', symbolSize: 5, areaStyle: {}
+					}]
+				});
+			},
+			trendWH_month() {
+				if (!this.trendWuHan_month) {
+					this.trendWuHan_month = echarts.init(document.getElementById("trendWuHan_month"));
+				}
+				this.trendWuHan_month.setOption({
+					title: {text: `武汉职位发布数量月变化`, left: "center", top: 15, textStyle: { fontSize: 17.5, },},
+					tooltip:{},
+					grid: {left: "1%", right: "3%", bottom: "1%", top: "26%", containLabel: true,},
+					xAxis: {
+						type: 'category', boundaryGap: false,
+						data:['1月', '2月','3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+					},
+					yAxis: { type: 'value' },
+					series: [{
+						data: [0, 0, 6, 38, 35, 12, 10, 817, 0, 6, 25, 478],
+						type: 'line', symbolSize: 10, areaStyle: {}
+					}]
+				});
+			},
+			
+			JobNum_Day() {
+				this.modDay = true;
+				this.trendMap_Day();
+			},
+			JobNum_Month() {
+				this.modMonth = true;
+				this.trendMap_Month();
+			},
+			BJ(){
+				this.BeiJing = true;
+				this.trendBJ_day();
+				this.trendBJ_month();
+			},
+			SH(){
+				this.ShangHai = true;
+				this.trendSH_day();
+				this.trendSH_month();
+			},
+			WH(){
+				this.WuHan = true;
+				this.trendWH_day();
+				this.trendWH_month();
+			}
+		}
+	}
+</script>
+<style lang="less">
+	#main::-webkit-scrollbar {
+		/*滚动条整体样式*/
+		width: 4;
+	}
+	#main::-webkit-scrollbar-thumb {
+		/*滚动条里面小方块*/
+		border-radius: 10px;
+		// -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		background: rgba(255, 64, 64, 0.8);
+	}
+	#main::-webkit-scrollbar-track {
+		/*滚动条里面轨道*/
+		// -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+		border-radius: 10px;
+		height: 25px;
+	}
+	.left{float: left;height: 100%;width: 10%;margin-right: 5px;font-size: 12px;font-weight: 900;color: white;writing-mode: vertical-rl;text-align: center;display:flex;flex-direction:column;justify-content:center;background-color: rgba(0, 0, 0, 0.4);}
+	.btn{background: rgba(0, 0, 0, 0.6);width: 75px;height: 33px;margin-right: 3px;}
+	.vertical-center-modal{display: flex;align-items: center;justify-content: center;.ivu-modal{top: 0;}}
+	#rythemMap{width: 100%;height: 100%;}
+</style>

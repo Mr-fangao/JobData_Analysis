@@ -1,0 +1,304 @@
+.main .container-fluid {
+  padding: 0 0px;
+}
+
+.breadcrumb {
+  position: relative;
+  margin-bottom: 0.01rem;
+  border-bottom: 1px solid #cfd8dc;
+}
+.ivu-layout-header {
+  background: #515a6e;
+  padding: 0 50px;
+  height: 40px;
+  line-height: 40px;
+}
+#layerToggle {
+  top: 20px;
+  right: 20px;
+  position: absolute;
+  z-index: 99;
+  background-color: white;
+  border-radius: 8px;
+  padding: 10px;
+  opacity: 0.75;
+}
+
+.header {
+  position: absolute;
+  z-index: 9999;
+  background: #19be6b;
+  height: 55px;
+  width: 100%;
+  padding: 0;
+  line-height: 50px;
+}
+
+.control-one {
+  .ivu-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .ivu- {
+    width: 68px;
+    border-radius: 2px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+body {
+  overflow-x: hidden;
+}
+
+ul {
+  list-style: none;
+}
+
+.icon {
+  float: left;
+  height: 30px;
+  width: 30px;
+  background: url("../img/icon.png") no-repeat left;
+  cursor: pointer;
+
+  &.baseLayer {
+    background-position: 0 0;
+  }
+
+  &.baseLayerImg {
+    background-position: -30px 0;
+  }
+
+  &.layerView {
+    background-position: -60px 0;
+  }
+
+  &.layerMore {
+    background-position: -120px 0;
+  }
+
+  &.layerClear {
+    background-position: 0 -60px;
+
+    &:hover {
+      background-position: 0 -90px;
+    }
+  }
+
+  /*tools*/
+  &.expand {
+    background-position: 0 -120px;
+
+    &:hover {
+      background-position: 0 -150px;
+    }
+
+    &.active {
+      background-position: -30px -150px;
+    }
+  }
+
+  &.mapScreen {
+    background-position: -60px -120px;
+
+    &:hover {
+      background-position: -60px -150px;
+    }
+  }
+
+  &.fullScreen {
+    background-position: -90px -120px;
+
+    &:hover {
+      background-position: -90px -150px;
+    }
+  }
+
+  &.zoomIn {
+    background-position: -120px -120px;
+
+    &:hover {
+      background-position: -120px -150px;
+    }
+  }
+
+  &.zoomOut {
+    background-position: -150px -120px;
+
+    &:hover {
+      background-position: -150px -150px;
+    }
+  }
+
+  &.measureLength {
+    background-position: -180px -120px;
+
+    &:hover {
+      background-position: -180px -150px;
+    }
+  }
+
+  &.measureArea {
+    background-position: -210px -120px;
+
+    &:hover {
+      background-position: -210px -150px;
+    }
+  }
+
+  &.clear {
+    background-position: -90px -180px;
+
+    &:hover {
+      background-position: -90px -210px;
+    }
+  }
+
+  &.swipeMap {
+    background-position: -30px -180px;
+
+    &:hover {
+      background-position: -30px -210px;
+    }
+  }
+
+  &.cmpMap {
+    background-position: -60px -180px;
+
+    &:hover {
+      background-position: -60px -210px;
+    }
+  }
+
+  &.print {
+    background-position: -150px -180px;
+
+    &:hover {
+      background-position: -150px -210px;
+    }
+  }
+}
+
+.layout-menu {
+  // margin-top: 55px;
+  height: 100%;
+
+  .menu-home {
+    height: 34px;
+    line-height: 34px;
+    font-size: 16px;
+    text-align: center;
+    border-bottom: 1px solid #484848;
+
+    .icon-home {
+      color: #b1b1b1;
+    }
+  }
+
+  .menu-icon {
+    font-size: 24px;
+  }
+
+  .menu-item {
+    a {
+      // padding: 10px 0 0 0;
+      color: black;
+    }
+
+    &:hover {
+      background: #343434;
+    }
+
+    a.nav-item {
+      display: block;
+      position: relative;
+      text-align: center;
+      border-bottom: 1px solid #484848;
+      cursor: pointer;
+
+      .flag {
+        float: right;
+        padding: 0 2px;
+        margin-top: -70px;
+        color: white;
+        background: red;
+        font-size: 10px;
+        border: 1px solid white;
+        border-right: 0;
+      }
+
+      .icon-wrap {
+        // padding: 8px 0;
+        padding: 2px 0;
+        color: #b1b1b1;
+      }
+
+      .div-label {
+        padding: 4px 0 8px 0;
+        color: rgb(224, 218, 218);
+      }
+    }
+
+    .sub-menu-item {
+      display: none;
+      z-index: 100;
+      position: absolute;
+      left: 70px;
+      padding: 10px 0 5px;
+      line-height: 28px;
+      min-width: 140px;
+      margin-top: -70px;
+      background: white;
+      overflow-y: auto;
+      background-color: #fff;
+      border: 4px solid #ccc;
+      border-left: 0;
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+      cursor: pointer;
+      transition: all 2s;
+      -moz-transition: all 2s;
+      /* Firefox 4 */
+      -webkit-transition: all 2s;
+      /* Safari and Chrome */
+      -o-transition: all 2s;
+
+      /* Opera */
+      li:hover {
+        background-color: #eee;
+        color: #555;
+      }
+
+      a {
+        display: block;
+        font-size: 12px;
+        padding: 0 20px;
+        cursor: pointer;
+      }
+    }
+
+    &.menu-item:hover {
+      .sub-menu-item {
+        display: block;
+      }
+
+      a.nav-item:after {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: transparent;
+        border-right-color: white;
+        border-width: 6px;
+        margin-top: -6px;
+      }
+    }
+  }
+}

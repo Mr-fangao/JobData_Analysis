@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+		<link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light/main.css">
+		<script src="https://js.arcgis.com/4.16/"></script>
+		<style>
+			html,
+			body,
+			#viewDiv {
+				padding: 0;
+				margin: 0;
+				height: 100%;
+				width: 100%;
+				color: black
+			}
+		</style>
+
+		<script>
+			require([
+				"esri/WebMap",
+				"esri/views/MapView",
+				"esri/layers/FeatureLayer",
+				"esri/widgets/Legend",
+				"esri/widgets/Search"
+			], function(WebMap, MapView, FeatureLayer, Legend, Search) {
+
+				//***分级渲染***//
+				const class1 = {
+					type: "simple-fill",
+					color: "rgba(115, 178, 255, 0.6)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class2 = {
+					type: "simple-fill",
+					color: "rgba(0, 197, 255,0.5)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class3 = {
+					type: "simple-fill",
+					color: "rgba(170, 255, 0,0.6)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class4 = {
+					type: "simple-fill",
+					color: "rgba(163, 255, 115,0.6)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class5 = {
+					type: "simple-fill",
+					color: "rgba(231, 237, 114,0.6)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class6 = {
+					type: "simple-fill",
+					color: "rgba(252, 228, 91,0.7)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class7 = {
+					type: "simple-fill",
+					color: "rgba(252, 179, 68,0.7)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class8 = {
+					type: "simple-fill",
+					color: "rgba(250, 133, 50,0.7)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class9 = {
+					type: "simple-fill",
+					color: "rgba(242, 86, 34,0.7)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+				const class10 = {
+					type: "simple-fill",
+					color: "rgba(232, 16, 20,0.7)",
+					style: "solid",
+					outline: {
+						width: 0.2,
+						color: [255, 255, 255, 0.5]
+					}
+				};
+
+				// 分级色彩
+				const classBreaksRenderer = {
+					type: "class-breaks",
+					field: "Join_Count",
+					defaultSymbol: {
+						type: "simple-fill",
+						color: "#ababab",
+						style: "backward-diagonal",
+						outline: {
+							width: 0.5,
+							color: [50, 50, 50, 0.6]
+						}
+					},
+					defaultLabel: "no data",
+					classBreakInfos: [{
+							minValue: 0,
+							maxValue: 3,
+							symbol: class1,
+							label: "0 - 3"
+						},
+						{
+							minValue: 4,
+							maxValue: 11,
+							symbol: class2,
+							label: "4 - 11"
+						},
+						{
+							minValue: 12,
+							maxValue: 35,
+							symbol: class3,
+							label: "12 - 35"
+						},
+						{
+							minValue: 36,
+							maxValue: 76,
+							symbol: class4,
+							label: "36 - 76"
+						},
+						{
+							minValue: 77,
+							maxValue: 144,
+							symbol: class5,
+							label: "77 - 144"
+						},
+						{
+							minValue: 145,
+							maxValue: 231,
+							symbol: class6,
+							label: "145 - 231"
+						},
+						{
+							minValue: 232,
+							maxValue: 369,
+							symbol: class7,
+							label: "232 - 369"
+						},
+						{
+							minValue: 370,
+							maxValue: 762,
+							symbol: class8,
+							label: "370 - 762"
+						},
+						{
+							minValue: 763,
+							maxValue: 1728,
+							symbol: class9,
+							label: "763 - 1728"
+						},
+						{
+							minValue: 1729,
+							maxValue: 2704,
+							symbol: class10,
+							label: "1729 - 2704"
+						},
+					]
+				};
+
+				//***渲染图层***//
+				var renderLayer = new FeatureLayer({
+					url: "http://localhost:6080/arcgis/rest/services/GraduatedColor/MapServer",
+					renderer: classBreaksRenderer,
+				});
+
+				var map = new WebMap({
+					portalItem: {
+						id: "bf024b8d0b4b48f5a486070214e87c5f"
+					},
+					layers: renderLayer
+				});
+
+				var view = new MapView({
+					container: "viewDiv",
+					map: map,
+					center: [117, 32],
+					zoom: 7
+				});
+				//***搜索***//
+				let search = new Search({
+					view: view
+				});
+				view.ui.add(search, {
+					position: "top-left",
+					index: 0
+				});
+
+				//***图例***//
+				const legend = new Legend({
+					view: view
+				});
+				view.ui.add(legend, "bottom-left");
+				
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="viewDiv"></div>
+	</body>
+
+</html>

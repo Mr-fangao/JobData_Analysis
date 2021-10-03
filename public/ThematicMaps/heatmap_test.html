@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="https://js.arcgis.com/4.16/esri/themes/light/main.css" />
+		<style>
+			html,
+			body,
+			#viewDiv {
+				padding: 0;
+				margin: 0;
+				height: 100%;
+				width: 100%;
+			}
+		</style>
+		<script src="https://js.arcgis.com/4.16/"></script>
+		<script>
+			require([
+				"esri/Map",
+				"esri/layers/FeatureLayer",
+				"esri/views/MapView",
+				"esri/widgets/Legend"
+			], function(Map, FeatureLayer, MapView, Legend) {
+				let url = "http://localhost:6080/arcgis/rest/services/SpatialSearch/MapServer";
+				let renderer = {
+					type: "heatmap",
+					colorStops: [
+						{
+							color: "rgba(208, 255, 208, 0.0)",
+							ratio: 0
+						},
+						{
+							color: "#8751e2",
+							ratio: 0.083
+						}, {
+							color: "#ff55ff",
+							ratio: 0.166
+						},
+						{
+							color: "#595cff",
+							ratio: 0.249
+						}, {
+							color: "#5381ff",
+							ratio: 0.332
+						},
+						{
+							color: "#00ffff",
+							ratio: 0.415
+						}, {
+							color: "#ff9549",
+							ratio: 0.498
+						},
+						{
+							color: "#ffaa00",
+							ratio: 0.581
+						}, {
+							color: "#ffff00",
+							ratio: 0.664
+						},
+						{
+							color: "#ffff7f",
+							ratio: 0.747
+						}, {
+							color: "#c28282",
+							ratio: 0.83
+						},
+						{
+							color: "#e03e3e",
+							ratio: 0.913
+						}, {
+							color: "#ff0000",
+							ratio: 0.85
+						}
+					],
+					maxPixelIntensity: 25,
+					minPixelIntensity: 0
+				};
+				let layer = new FeatureLayer({
+					url: url,
+					renderer: renderer,
+					outFields: ["*"],
+					popupTemplate: {
+					  title: "{CNAME}",
+					  content: [
+					    {
+					      type: "fields",
+					      fieldInfos: [
+					        {
+					          fieldName: "EDUCATION"
+					        },
+					        {
+					          fieldName: "SALARY"
+					        }
+					      ]
+					    }
+					  ]
+					}
+				});
+
+				// let map = new WebMap({
+				//   portalItem:{ id:"bf024b8d0b4b48f5a486070214e87c5f" },
+				//   layers: [layer]
+				// });
+				const map = new Map({
+					basemap: {
+						portalItem: {
+							id: "8d91bd39e873417ea21673e0fee87604"
+						}
+					},
+					layers: [layer]
+				});
+
+				let view = new MapView({
+					container: "viewDiv",
+					map: map,
+					zoom: 10,
+					center: [121.442828, 31.197019]
+				});
+
+				view.ui.add(
+					new Legend({
+						view: view
+					}),
+					"bottom-left"
+				);
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="viewDiv"></div>
+	</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>薪资三维热力图</title>
+		<script src="http://webapi.amap.com/maps?v=1.4.15&key=b66d0f4f3c2fe5d92cea37a3b70424cb&"></script>
+		<script src="http://webapi.amap.com/loca?v=1.3.2&key=b66d0f4f3c2fe5d92cea37a3b70424cb"></script>
+		<script src="http://a.amap.com/Loca/static/dist/jquery.min.js"></script>
+		<!-- <link rel="stylesheet" href="http://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" /> -->
+		<style>
+			html,body,#container {margin: 0;padding: 0;width: 100%;height: 100%;}
+			.amap-logo {display: none !important;visibility: hidden !important;}
+			.amap-copyright {display: none !important;visibility: hidden !important;}
+			.amap-maptypecontrol {right: 1%;top: 38%;}
+			.amap-scalecontrol {margin-right: 0.09%;margin-bottom: 16%;}
+			.amap-scale-text {color: white;}
+			
+		</style>
+	</head>
+	<body>
+		<div id="container" class="container"></div>
+		<script>
+			//116.365868,39.912289 121.381709, 31.1812813
+			var map = new AMap.Map('container', {
+				features: ['bg', 'point', 'road', 'building'],
+				mapStyle: 'amap://styles/dark',
+				center: [116.255868,39.842289],
+				pitch: 45,
+				zoom: 10.9,
+				viewMode: '3D'
+			});
+			
+			AMap.plugin(['AMap.ControlBar', 'AMap.Scale', "AMap.MapType"], function() {
+				// 地图控件
+				map.addControl(new AMap.ControlBar({
+					position: {
+						top: '15px',
+						right: '1px'
+					}
+				}));
+				map.addControl(new AMap.Scale({
+					position: "RB"
+				}));
+				map.addControl(new AMap.MapType(
+				));
+			});
+			var layer = new Loca.HeatmapLayer({
+				map: map,
+			});
+			
+			$.get('data/heatData.json', function(datas) {
+				layer.setData(datas, {
+					lnglat: function(data) {
+						return [data.value.lng, data.value.lat]
+					},
+					value: 'salary'
+				});
+				layer.setOptions({
+					style: {
+						radius: 18,
+					},
+					gradient: {
+						0.65: 'rgb(54, 47, 255)',
+						0.65: 'rgb(85, 170, 255)',
+						0.7: 'rgb(78, 255, 66)',
+						0.7: 'rgb(0, 255, 0)',
+						0.8: 'rgb(255, 255, 0)',
+						1.0: 'rgb(255, 0, 0)'
+					}
+				}).render();
+			});
+		</script>
+
+	</body>
+</html>
