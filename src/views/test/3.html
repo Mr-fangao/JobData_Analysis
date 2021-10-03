@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+	<title>heatMap</title>
+	<link rel="stylesheet" type="text/css" href="http://192.168.0.211/pubzy/arcgis_js_api/4.10/esri/css/main.css" />
+	<style>
+		html, body, #map {
+		  height: 100%;
+		  margin: 0;
+		  padding: 0;
+		}
+	</style>
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script src="https://js.arcgis.com/4.8/init.js"></script>
+</head>
+
+<body>
+	<div id="map"></div>
+</body>
+
+<script>
+ require(["esri/map",
+	"esri/views/MapView",
+	"esri/Basemap",
+	"esri/geometry/Extent",		  
+	"esri/layers/TileLayer",
+	"esri/layers/FeatureLayer",
+	"esri/renderers/HeatmapRenderer", 
+	"dojo/domReady!"], function (Map,
+MapView,
+BaseMap,
+Extent,
+TileLayer,  
+FeatureLayer,
+HeatmapRenderer) {
+  
+  	let map, view;
+	(function () {//加载底图等
+		map = new Map({
+			basemap: getBaseMap({
+				"title": "影像图",
+				"thumbnailUrl": "images/map/影像图.gif",
+				"type": "tile",
+				"layer": "http://192.168.0.206:6080/arcgis/rest/services/HNJCZS/HNJCZSYXT/MapServer"
+			  }),
+		});
+		view = new MapView({
+			container: "map",
+			map: map,
+			extent: new Extent({
+			  "xmin": 105,
+			  "ymin": 18,
+			  "xmax": 115,
+			  "ymax": 20,
+			  "spatialReference": { "wkid": 4326 }
+			}),
+		});
+		view.ui._removeComponents(["attribution"]);
+	})();	  
+	function getBaseMap(basemapcof) {
+		let baselayer = new TileLayer({
+			url: basemapcof.layer,
+		});
+		return new BaseMap({
+			baseLayers: baselayer,
+			title: basemapcof.title,
+			thumbnailUrl: "../" + basemapcof.thumbnailUrl,
+		});
+	}
+	
+    var heatmapRenderer = new HeatmapRenderer({//设置渲染器
+      colorStops: [{ ratio: 0.4, color: "rgba(0, 255, 0, 0)" },
+	    { ratio: 0.75, color: "rgba(255, 140, 0, 1)" },
+		{ ratio: 0.9, color: "rgba(255, 0,   0, 1)" }],
+		blurRadius: 8,
+		maxPixelIntensity: 230,
+		minPixelIntensity: 10
+    });
+
+    var heatDataUrl = "data/heatJson.json";
+    $.getJSON(heatDataUrl,{},function(data,textStatus,jqXHR){//读取数据，设置点数据集
+		var features = [];
+		for (var i = 0; i < data.heatData.length; i++) {
+			var x = data.heatData[i].lng;
+			var y = data.heatData[i].lat;
+			features.push({
+				geometry: {
+					type: "point",
+					x: x,
+					y: y
+				},
+				attributes: {
+					ObjectID: i,//重要！！！
+				}
+			});
+		}
+	  
+		var featureLayer = new FeatureLayer({
+			  source: features,//点数据集
+			  title: "热力图",
+			  objectIdField: "ObjectID",//重要！！！
+			  renderer: heatmapRenderer//渲染器
+		});
+		
+		map.add(featureLayer);
+    });
+
+});
+</script>
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="https://js.arcgis.com/4.17/esri/themes/dark/main.css" />
+		<script src="https://js.arcgis.com/4.17/init.js"></script>
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+		<style>
+			html,body,#viewDiv {padding: 0;margin: 0;height: 100%;width: 100%;}
+			.esri-attribution{display: none;}
+			.esri-view .esri-view-surface--inset-outline:focus::after {outline: auto 0px Highlight !important;outline: auto 0px -webkit-focus-ring-color !important;}
+			.esri-legend--card__section{width: 100px;}
+			#divShowResult {height: 30%;width: 75%;overflow: auto;position: absolute;bottom: 0.5%;left: 0.5%;z-index: 9999;border-radius: 3px;}
+
+			#divShowResult::-webkit-scrollbar {
+				/*滚动条整体样式*/
+				width: 5px; height: 5px;
+			}
+			#divShowResult::-webkit-scrollbar-thumb {
+				/*滚动条里面小方块*/
+				border-radius: 10px; -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); background: #ffffff;
+			}
+			#divShowResult::-webkit-scrollbar-track {
+				/*滚动条里面轨道*/
+				-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); border-radius: 10px; background: #505050;
+			}
+			
+			td,th {
+				/* border-right: 1px solid gray; */
+				border-bottom: 1px solid gray; font-weight: 400; background-color: rgba(0, 0, 0, 0.7); box-sizing: border-box;
+			}
+			th {
+				border-right: 0px solid gray; background-color: rgba(0, 0, 0, 1); height: 40px; font-weight: 600; color: #ffffff;
+			}
+			
+			table {
+				margin: 0; padding: 0; table-layout: fixed; border-collapse: collapse; border-spacing: 0.5px; width: 100%;
+			}
+			td:first-child, th:first-child {
+				position: sticky; left: 0; background-color: rgba(0, 0, 0, 1); z-index: 1;
+			}
+			thead tr th {
+				position: sticky; top: 0;
+			}
+			th:first-child {
+				z-index: 2; background-color: rgba(0, 0, 0, 1);
+			}
+
+			a {
+				color: white; font-size: 13px; text-decoration: none;
+			}
+		</style>
+		<script>
+			require([
+				"esri/widgets/Sketch",
+				"esri/Map",
+				"esri/layers/GraphicsLayer",
+				"esri/views/MapView",
+				"esri/Basemap",
+				"esri/layers/FeatureLayer",
+				"esri/views/draw/Draw",
+				"esri/Graphic",
+				"esri/tasks/IdentifyTask",
+				"esri/tasks/support/IdentifyParameters",
+				"esri/tasks/QueryTask",
+				"esri/tasks/support/Query",
+				"esri/symbols/SimpleLineSymbol",
+				"esri/symbols/SimpleFillSymbol",
+				"dojo/dom",
+				"dojo/on",
+				"esri/Color",
+				"esri/widgets/Expand",
+				"esri/widgets/Legend",
+				"esri/widgets/Search",
+				"esri/widgets/CoordinateConversion",
+				"esri/widgets/BasemapGallery"
+			], function(Sketch, Map, GraphicsLayer, MapView, Basemap, FeatureLayer,
+				Draw, Graphic, IdentifyTask, IdentifyParameters, QueryTask, Query, SimpleLineSymbol, SimpleFillSymbol,  
+				dom, on, Color, Expand, Legend, Search, CoordinateConversion, BasemapGallery) {
+				
+				//创建全国矢量图层（feature）
+				var countrylayer = new FeatureLayer({
+					url: 'http://localhost:6080/arcgis/rest/services/SpatialSearch/MapServer?f=jsapi/0',
+					title: null, outFields: ["*"],
+					popupTemplate: {
+					  title: "{CNAME}",
+					  content: [
+					    {
+					      type: "fields",
+					      fieldInfos: [
+									{fieldName: "JNAME",label: "职位名称"},
+									{fieldName: "EDUCATION",label: "学历要求"},
+									{fieldName: "SALARY",label: "薪资区间"},
+									{fieldName: "EXPERENCE",label: "工作经验"},
+									{fieldName: "CTYPE",label: "公司类型"},
+									{fieldName: "CSIZE",label: "公司规模"},
+									{fieldName: "INDUSTRY",label: "行业领域"},
+									{fieldName: "RECNUM",label: "招聘人数"},
+									{fieldName: "PUB_TIME",label: "发布时间"},
+					      ]
+					    }
+					  ]
+					}
+				});
+				
+				//实例化一个图形图层
+				const layer = new GraphicsLayer();
+
+				//创建地图对象
+				const map = new Map({basemap: "streets-night-vector",layers: [countrylayer, layer]});
+				//渲染二维地图
+				const view = new MapView({container: "viewDiv",map: map,zoom: 4,center: [116.410593, 39.883965]});
+				// 地图控件
+				let search = new Search({view: view});view.ui.add(search, {position: "top-left",index: 0});
+				let basemapGallery = new Expand({content: new BasemapGallery({view: view,style: "card"}),view: view,expanded: false});view.ui.add(basemapGallery, "top-left");
+				let legend = new Expand({content: new Legend({view: view,style: "card"}),view: view,expanded: true});view.ui.add(legend, "top-left");
+				//绘图小部件
+				const sketch = new Sketch({
+					layer: layer,
+					view: view,
+					creationMode: "update"
+				});
+				//向视图中添加绘图小部件
+				view.ui.add(sketch, "top-right");
+				//给视图小部件添加监听事件，监听它完成的时候
+				sketch.on("create", function(event) {
+					if (event.state === "complete") {
+						//console.log(event);
+						//使用graphic.geometry 去查询相交特征
+						//console.log(event.graphic.geometry);
+						//使用geometry（QueryTask）
+						queryTask(event.graphic.geometry);
+					}
+				});
+
+				//空间查询（QueryTask）
+				function queryTask(geometry) {
+					// console.log(geometry);
+					var china =
+						"http://localhost:6080/arcgis/rest/services/SpatialSearch/MapServer?f=jsapi/0";
+					var qTask = new QueryTask({
+						url: china //全国矢量
+					});
+					var query = new Query({
+						returnGeometry: true,
+						outFields: ["*"], //结果要素包含的属性字段 
+					});
+					query.geometry = geometry;
+					//console.log(query.geometry);
+					//空间参考信息
+					query.outSpatialReference = map.spatialReference;
+					//查询的标准，此处代表和geometry相交的图形都要返回
+					query.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
+					//执行空间查询
+					qTask.execute(query).then(showQueryResult);
+				}
+				//执行查询
+				function showQueryResult(queryResult) {
+					//console.log(queryResult)
+					//创建线符号					
+					var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASH, new Color([0, 255, 0, 0.5]));
+					//创建面符号
+					var fill = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new Color([0, 255, 0]));
+					if (queryResult.features.length == 0) {
+						dom.byId("divShowResult").innerHTML = "查询结果为空！";
+						return;
+					};
+					
+					var htmls = "";
+					if (queryResult.features.length >= 1) {
+						htmls = htmls + "<table style=\"text-align:center;\">"; //创建一个表，使用了转义字符
+						htmls = htmls +
+							"<thead> <tr id=\"tbHead\"> <th style=\"width: 250px;\">公司名称</th> <th style=\"width: 200px;\">职位名称</th> <th style=\"width: 100px;\">薪资区间</th> <th style=\"width: 90px;\">学历要求</th> <th style=\"width: 90px;\">工作经验</th> <th style=\"width: 225px;\">行业领域</th> <th style=\"width: 90px;\">公司类型</th> <th style=\"width: 100px;\">公司规模</th> <th style=\"width: 100px;\">工作地区</th> <th style=\"width: 200px;\">公司地址</th> <th style=\"width: 85px;\">招聘人数</th> <th style=\"width: 85px;\">招聘时间</th></tr> <thead>"; //创建数据行
+						for (var i = 0; i < queryResult.features.length; i++) {
+							//得到graphic	
+							var graphic = queryResult.features[i];
+							//给图形赋予符号	
+
+							//graphic.setSymbol(fill);  //api3.×
+							graphic.symbol = fill; //api 4.x				
+							//添加到地图从而实现高亮效果						
+							view.graphics.add(graphic); //api 4.x
+
+							//获得名称信息，此处应和shp的属性表对应						
+							var cName = graphic.attributes["CNAME"];
+									jName = graphic.attributes["JNAME"];
+									jSRange = graphic.attributes["SALARY"];
+									jEduc = graphic.attributes["EDUCATION"];
+									jExper = graphic.attributes["EXPERENCE"];
+									jIndustry = graphic.attributes["INDUSTRY"];
+									jCType = graphic.attributes["CTYPE"];
+									jCSize = graphic.attributes["CSIZE"] + '人';
+									jWRelg = graphic.attributes["WORK_AREA"];
+									cPlace = graphic.attributes["WORK_PLACE"];
+									jRecNum = graphic.attributes["RECNUM"] + '人';
+									jTime = graphic.attributes["PUB_TIME"];
+							
+
+							htmls = htmls +
+								"<td><a href=\"#\">" + cName + "</a></td>" +
+								"<td><a href=\"#\">" + jName + "</a></td>" +
+								"<td><a href=\"#\">" + jSRange + "</a></td>" +
+								"<td><a href=\"#\">" + jEduc + "</a></td>" +
+								"<td><a href=\"#\">" + jExper + "</a></td>" +
+								"<td><a href=\"#\">" + jIndustry + "</a></td>" +
+								"<td><a href=\"#\">" + jCType + "</a></td>" +
+								"<td><a href=\"#\">" + jCSize + "</a></td>" +
+								"<td><a href=\"#\">" + jWRelg + "</a></td>" +
+								"<td><a href=\"#\">" + cPlace + "</a></td>" +
+								"<td><a href=\"#\">" + jRecNum + "</a></td>" +
+								"<td><a href=\"#\">" + jTime + "</a></td>";
+
+							htmls = htmls + "</tr>";
+						}
+						htmls = htmls + "</table>";
+						dom.byId("divShowResult").innerHTML = htmls;
+					}
+				}
+			
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="viewDiv"></div>
+		<div id="divShowResult"></div>
+		<div id="divShowResult2"></div>
+	</body>
+
+</html>

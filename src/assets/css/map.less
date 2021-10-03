@@ -1,0 +1,536 @@
+#viewDiv {
+    padding: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: #FCF9F2 // background: url("../img/mapbg.gif");
+}
+.tools {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.mapbar {
+    position: absolute;
+    top: 5px;
+    right: 185px;
+
+    li.more {
+        padding: 0 !important;
+    }
+
+    li.btn {
+        float: left;
+        padding: 0 10px 0 4px;
+        height: 30px;
+        line-height: 30px;
+        background: #ffffff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        transition: all .2s;
+        cursor: pointer;
+
+        &.active {
+            background: #19be6b;
+            color: white;
+        }
+
+        &:not(:first-child) {
+            margin-left: 10px;
+        }
+
+        span.icon-chevron-down {
+            margin-left: 6px;
+
+            &:hover {
+                opacity: .8;
+            }
+        }
+
+        &.back {
+            * {
+                vertical-align: middle;
+            }
+        }
+
+        span.back {
+            padding: 0 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+    }
+}
+
+.smallTools {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.smallMapbar {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    li.more {
+        padding: 0 !important;
+    }
+
+    li.btn {
+        float: left;
+        padding: 0 10px 0 4px;
+        height: 30px;
+        line-height: 30px;
+        background: #ffffff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        transition: all .2s;
+        cursor: pointer;
+        &.active {
+            background: #19be6b;
+            color: white;
+        }
+
+        &:not(:first-child) {
+            margin-left: 10px;
+        }
+
+        span.icon-chevron-down {
+            margin-left: 6px;
+
+            &:hover {
+                opacity: .8;
+            }
+        }
+
+        &.back {
+            * {
+                vertical-align: middle;
+            }
+        }
+
+        span.back {
+            padding: 0 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+    }
+}
+
+.onemap-measure.tooltip {
+    position: absolute;
+    font-size: 12px;
+    line-height: 14px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 6px 6px;
+    white-space: nowrap;
+}
+
+
+.esri-zoom .esri-widget--button:last-child {
+    border-top: solid 1px rgba(50, 50, 50, 0.25);
+    display: none;
+}
+
+
+
+.my-popup {
+    position: absolute;
+    z-index: 1;
+    transform: translate(-50%, -100%);
+    transition: opacity 0.2s linear;
+
+    .popup-content-wrapper {
+        padding: 10px 10px 10px;
+        min-width: 60px;
+        max-width: 200px;
+        background: white;
+        color: #333;
+        text-align: center;
+        box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+
+        .popup-footer {
+            text-align: right;
+            padding: 4px;
+
+            span {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .popup-tip-container {
+        width: 40px;
+        height: 20px;
+        position: absolute;
+        left: 50%;
+        margin-left: -20px;
+        overflow: hidden;
+        pointer-events: none;
+
+        .popup-tip {
+            width: 17px;
+            height: 17px;
+            padding: 1px;
+            margin: -10px auto 0;
+            background: white;
+            color: #333;
+            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+    }
+
+
+    .popup-close {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        cursor: pointer;
+
+        &:hover {
+            opacity: .8;
+        }
+    }
+}
+
+.esri-popup__main-container {
+    max-height: 300px;
+
+    .v-popup-content {
+        padding: 5px 0 10px; // min-height: 120px;
+        min-height: 138px;
+        color: #333333;
+        margin: 0 !important;
+        overflow-y: auto;
+    }
+
+    .v-popup-footer {
+        height: 30px;
+        line-height: 30px;
+        text-align: right;
+        padding-right: 10px;
+        border-top: 1px solid #d3d3d3;
+
+        .link {
+            color: #19be6b;
+            text-decoration: none !important;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.layerIcon {
+    background: url("../img/layerIcon.png") no-repeat left;
+    float: left;
+    height: 20px;
+    width: 20px;
+
+    &.l-group {
+        background-position: 0 0;
+        margin-right: 2px;
+    }
+
+    &.l-layer {
+        background-position: -20px 0;
+        margin-right: 2px;
+
+        &.active {
+            background-position: -40px 0;
+        }
+    }
+
+    &.l-unExpand {
+        background-position: -80px 0;
+
+        &.active {
+            background-position: -60px 0;
+        }
+    }
+
+    &.l-unCheck {
+        background-position: -100px 0;
+
+        &.active {
+            background-position: -120px 0;
+        }
+    }
+
+    &.disabled {
+        background-position: -140px 0;
+    }
+}
+
+.icon {
+    float: left;
+    height: 30px;
+    width: 30px;
+    background: url("../img/icon.png") no-repeat left;
+    cursor: pointer;
+
+    &.baseLayer {
+        background-position: 0 0;
+    }
+
+    &.baseLayerImg {
+        background-position: -30px -00px;
+    }
+
+    &.layerView {
+        background-position: -60px 0;
+    }
+
+    &.baseLayer25D {
+        background-position: -90px 0;
+    }
+
+    &.layerMore {
+        background-position: -120px 0;
+    }
+
+    &.layerClose {
+        background-position: 0 -60px;
+
+        &:hover {
+            background-position: 0 -90px;
+        }
+    }
+}
+
+.layerManager {
+    position: absolute;
+    top: 35px;
+    right: 0;
+    padding: 0 0 10px 5px;
+    background: white;
+    width: 250px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+    .ivu-tabs {
+        width: 100%;
+
+        .ivu-tabs-bar {
+            margin-bottom: 5px;
+        }
+
+        .ivu-tabs-tab {
+            padding: 8px 10px;
+        }
+    }
+
+    header {
+        padding: 0 4px;
+        height: 30px;
+        line-height: 30px;
+        border-bottom: 1px solid #d2d2d2;
+
+        span {
+            float: right;
+
+            i {
+                font-size: 20px;
+            }
+        }
+    }
+
+    section {
+        width: 100%;
+        overflow-y: auto;
+
+        ul {
+            padding-left: 1em;
+            transition: all .2s;
+
+            div.tree-node {
+                position: relative;
+                line-height: 25px;
+                font-size: 13px;
+                cursor: pointer;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                transition: all .2s;
+
+                .ivu-checkbox-wrapper {
+                    float: left;
+                    margin-right: 4px;
+                    margin-left: 2px;
+                }
+
+                // .ivu-tooltip-popper {
+                //     top: -40px !important;
+                // }
+            }
+        }
+
+        .layerIcon {
+            margin-top: 3px;
+        }
+
+        .badge-dot::after {
+            content: "";
+            position: absolute;
+            height: 8px;
+            width: 8px;
+            border-radius: 100%;
+            background: #ed3f14;
+            z-index: 10;
+            box-shadow: 0 0 0 1px #fff;
+        }
+
+        .tools {
+            float: right;
+            margin-right: 10px;
+
+            i {
+                font-size: 16px;
+            }
+
+            i:hover {
+                color: red;
+            }
+
+            &.fav {
+                margin-right: 4px;
+            }
+        }
+    }
+
+    .legend-view {
+        .ivu-select-selection {
+            border-radius: 0;
+        }
+
+        .legend-header {
+            padding-left: 5px;
+            padding-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .legend-section {
+            overflow-y: auto;
+        }
+    }
+}
+
+/**Esri 样式修正**/
+
+&.baseLayerGray {
+    .esri-view-surface {
+        .esri-display-object:first-child {
+            filter: grayscale(80%)
+        }
+    }
+}
+
+.esri-popup__main-container {
+    width: 300px !important;
+}
+
+.esri-popup__header {
+    color: #fff;
+    background-color: #19be6b;
+}
+
+.esri-popup__header>h1 {
+    margin: 0 !important;
+}
+
+.esri-popup__header-title {
+    padding: 7px 15px !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.esri-popup__content {
+    padding: 0 0 4px;
+    color: #333333;
+    margin: 0 !important;
+}
+
+.esri-popup__button {
+    outline: none;
+    color: white;
+    padding: 7px 7px;
+
+    esri-popup__button--dock {
+        display: none !important;
+        pointer-events: none;
+    }
+
+    &:hover {
+        color: white;
+        opacity: 0.8;
+    }
+
+
+}
+
+.esri-popup--aligned-bottom-center .esri-popup__pointer-direction {
+    background: #19be6b;
+}
+
+.esri-display-object image {
+    cursor: pointer;
+}
+
+.esri-popup__feature-buttons {
+    display: none !important;
+}
+
+.draw {
+    background: white;
+
+    span {
+        color: #19be6b;
+    }
+}
+
+#switchbasemap {
+    float: left;
+    padding: 0 10px 0 4px;
+    height: 30px;
+    line-height: 30px;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.esri-ui-corner .esri-component.esri-widget--panel {
+    width: 300px;
+    display: none;
+}
+
+.esri-view-height-small .esri-expand .esri-widget--panel,
+.esri-view-height-small .esri-expand .esri-widget--panel-height-only,
+.esri-view-height-small .esri-ui-corner .esri-component.esri-widget--panel,
+.esri-view-height-small .esri-ui-corner .esri-component.esri-widget--panel-height-only {
+    max-height: 206px;
+    width: 206px;
+    margin-top: 15px;
+    margin-right: -17px;
+    display: none;
+}
+
+.esri-view-height-xsmall .esri-expand .esri-widget--panel,
+.esri-view-height-xsmall .esri-expand .esri-widget--panel-height-only,
+.esri-view-height-xsmall .esri-ui-corner .esri-component.esri-widget--panel,
+.esri-view-height-xsmall .esri-ui-corner .esri-component.esri-widget--panel-height-only {
+    display: none;
+}
+
+.esri-view-height-xsmall .esri-ui-corner .esri-component.esri-widget--panel {
+    display: none;
+    margin-right: -20px;
+    max-height: 240px;
+    width: 210px;
+    /* margin-left: px; */
+    margin-top: 15px;
+}

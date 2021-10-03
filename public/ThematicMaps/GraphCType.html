@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+		<link rel="stylesheet" href="https://js.arcgis.com/4.6/esri/themes/dark/main.css">
+		<style>
+			html, body{height: 100%;width: 100%;margin: 0;padding: 0;}
+			body {background-color: #FFF;overflow: hidden;font-family: "Trebuchet MS", sans-serif;}
+			#viewDiv {padding: 0;margin: 0;height: 100%;width: 100%;}
+			#infoDiv {position: absolute;top: 15px;left: 60px;}
+			#infoDiv input {border: none;box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px;}
+			.esri-attribution{display: none;}
+			.esri-view .esri-view-surface--inset-outline:focus::after {outline: auto 0px Highlight !important;outline: auto 0px -webkit-focus-ring-color !important;}
+		</style>
+	</head>
+
+	<body>
+		<div id="viewDiv"></div>
+		<script src="./echarts3Layer/echarts3Extent.js"></script>
+		<script>
+			var package_path = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+				var dojoConfig = {
+					parseOnLoad: true,
+					packages: [{ "name": "src","location": package_path+"/echarts3Layer/" }]
+			};
+		</script>
+		<script src="https://js.arcgis.com/4.6/"></script>
+		<script>
+		var map,view, options=[];
+		require([
+			"esri/WebMap", 
+			'esri/views/MapView', 
+			"esri/views/SceneView", 
+			"esri/widgets/Search",
+			"esri/widgets/Home",
+			"esri/widgets/BasemapToggle",
+			"src/Echarts3Layer", 
+			"dojo/domReady!"], 
+			function (
+			WebMap, MapView, 
+			SceneView, Search, 
+			Home, BasemapToggle, Echarts3Layer) {
+			var switchButton = document.getElementById("switch-btn");
+			let map = new WebMap({
+				portalItem:{ id:"bf024b8d0b4b48f5a486070214e87c5f" }
+			});
+			view = new MapView({
+				map: map,
+				container: 'viewDiv',
+				scale: 9244648.86861805,
+				center: [120.48053886017651, 31.235929042252014],
+				zoom: 8
+			})
+			let search = new Search({ view: view });
+			view.ui.add(search, { position: "top-left", index: 0 })
+			
+			let home = new Home({ view: view });
+			view.ui.add(home, { position: "top-left", })
+			
+			let basemapToggle = new BasemapToggle({view: view, nextBasemap: "streets-night-vector"});
+			view.ui.add(basemapToggle, "bottom-left");
+			
+			
+			var option1 = {
+				color: ['#aaaaff', '#00ff00', '#c23531', '#d1ff66', '#0055ff', '#00aaff', '#aa5500', '#7068cb','#55aa7f'],
+				tooltip: {
+					trigger: 'item',
+					formatter: '{a} <br/>{b} : {c} ({d}%)'
+				},
+				// 图表位置
+				grid: [
+					{lat: 30.598466736400987,lon: 114.31158155473231,width: '28px',height: '28px'}, //武汉
+					{lat: 31.235929042252014,lon: 121.48053886017651,width: '28px',height: '28px'}, //上海
+					{lat: 32.06465288561847,lon: 118.80242172124585,width: '28px',height: '28px'}, //南京
+					{lat: 30.25308298169347,lon: 120.21551180372168,width: '28px',height: '28px'}, //杭州
+					{lat: 31.303564074441766,lon: 120.59241222959322,width: '28px',height: '28px'}, //苏州
+					{lat: 31.815795653327836,lon: 119.98148471327892,width: '28px',height: '28px'}, //常州
+					{lat: 31.826577833686887,lon: 117.23344266497664,width: '28px',height: '28px'}, //合肥
+					{lat: 31.498809732685714,lon: 120.31858328810601,width: '28px',height: '28px'}, //无锡
+					{lat: 32.40067693609037,lon: 119.41941890822997,width: '28px',height: '28px'}, //扬州
+					{lat: 30.750974830920143,lon: 120.76355182586005,width: '28px',height: '28px'}, //嘉兴
+					{lat: 29.866033045866054,lon: 121.62857249434141,width: '28px',height: '28px'}, //宁波
+					{lat: 31.358536655799266,lon: 118.43943137653523,width: '28px',height: '28px'}, //芜湖
+					{lat: 31.98654943120089,lon: 120.90159173866185,width: '28px',height: '28px'}, //南通
+				],
+				series: [
+					{// 武汉
+						name:'武汉-公司类型占比',type:'pie',radius : '28px',avoidLabelOverlap: false,
+						label: {
+							normal: {show: false,position: 'center'},
+							emphasis: {show: true,textStyle: {fontSize: '12',fontWeight: 'bold'}}
+						},
+						data:[
+							{value:0, name:'创业',}, {value:4, name:'非营利'}, {value:1703, name:'民营'},
+							{value:263, name:'上市'},{value:9, name:'事业'},{value:35, name:'合资'}, 
+							{value:115, name:'国企'}, {value:6, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 上海
+						name:'上海-公司类型占比',type:'pie',radius : '28px',avoidLabelOverlap: false,
+						label: {
+							normal: {show: false,position: 'center'},
+							emphasis: {show: true,textStyle: {fontSize: '12',fontWeight: 'bold'}}
+						},
+						data:[
+							{value:13, name:'创业'}, {value:2, name:'非营利'}, {value:1079, name:'民营'},
+							{value:144, name:'上市'},{value:12, name:'事业'},{value:34, name:'合资'}, 
+							{value:82, name:'国企'}, {value:61, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 南京
+						name:'南京-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:6, name:'创业'}, {value:0, name:'非营利'}, {value:719, name:'民营'},
+							{value:186, name:'上市'},{value:4, name:'事业'},{value:17, name:'合资'}, 
+							{value:33, name:'国企'}, {value:22, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					
+					{// 杭州
+						name:'杭州-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:9, name:'创业'}, {value:0, name:'非营利'}, {value:434, name:'民营'},
+							{value:64, name:'上市'},{value:3, name:'事业'},{value:6, name:'合资'}, 
+							{value:72, name:'国企'}, {value:8, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 苏州
+						name:'苏州-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:3, name:'创业'}, {value:0, name:'非营利'}, {value:309, name:'民营'},
+							{value:16, name:'上市'},{value:8, name:'事业'},{value:14, name:'合资'}, 
+							{value:41, name:'国企'}, {value:31, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 常州
+						name:'常州-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:0, name:'创业'}, {value:0, name:'非营利'}, {value:22, name:'民营'},
+							{value:2, name:'上市'},{value:1, name:'事业'},{value:5, name:'合资'}, 
+							{value:16, name:'国企'}, {value:0, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 合肥
+						name:'合肥-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:1, name:'创业'}, {value:0, name:'非营利'}, {value:161, name:'民营'},
+							{value:36, name:'上市'},{value:1, name:'事业'},{value:2, name:'合资'}, 
+							{value:25, name:'国企'}, {value:2, name:'外资'}, {value:0, name:'政府'},
+						]
+					},	
+					{// 无锡
+						name:'无锡-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:5, name:'创业'}, {value:0, name:'非营利'}, {value:83, name:'民营'},
+							{value:62, name:'上市'},{value:4, name:'事业'},{value:5, name:'合资'}, 
+							{value:19, name:'国企'}, {value:0, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 扬州
+						name:'扬州-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:0, name:'创业'}, {value:0, name:'非营利'}, {value:12, name:'民营'},
+							{value:0, name:'上市'},{value:3, name:'事业'},{value:0, name:'合资'}, 
+							{value:1, name:'国企'}, {value:0, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 嘉兴
+						name:'嘉兴-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:0, name:'创业'}, {value:0, name:'非营利'}, {value:24, name:'民营'},
+							{value:1, name:'上市'},{value:8, name:'事业'},{value:24, name:'合资'}, 
+							{value:21, name:'国企'}, {value:2, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 宁波
+						name:'宁波-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:1, name:'创业'}, {value:0, name:'非营利'}, {value:70, name:'民营'}, 
+							{value:0, name:'上市'},{value:3, name:'事业'},{value:7, name:'合资'}, 
+							{value:12, name:'国企'}, {value:1, name:'外资'}, {value:2, name:'政府'},
+						]
+					},
+					{// 芜湖
+						name:'芜湖-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:0, name:'创业'}, {value:0, name:'非营利'}, {value:7, name:'民营'}, 
+							{value:1, name:'上市'},{value:0, name:'事业'},{value:0, name:'合资'}, 
+							{value:5, name:'国企'}, {value:4, name:'外资'}, {value:0, name:'政府'},
+						]
+					},
+					{// 南通
+						name:'南通-公司类型占比', type:'pie', radius : '28px', avoidLabelOverlap: false,
+						label: {
+							normal: { show: false,position: 'center' },
+							emphasis: { show: true, textStyle: { fontSize: '12',fontWeight: 'bold' } }
+						},
+						data:[
+							{value:0, name:'创业'}, {value:0, name:'非营利'}, {value:69, name:'民营'}, 
+							{value:0, name:'上市'},{value:19, name:'事业'},{value:0, name:'合资'}, 
+							{value:0, name:'国企'}, {value:0, name:'外资'}, {value:0, name:'政府'},						
+						]
+					}
+				]
+			};	
+			options.push(option1)
+			view.when(function(){ initChart() })
+			function initChart(){
+				options.forEach((option,index)=>{
+					var overlay = new Echarts3Layer(view, echarts,'chartId_'+index)
+					var chartsContainer = overlay.getEchartsContainer()
+					overlay.initECharts(chartsContainer)
+					overlay.setOption(option)			   
+				})
+			}
+		});
+		</script>
+	</body>
+</html>

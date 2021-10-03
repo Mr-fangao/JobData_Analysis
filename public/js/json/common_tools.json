@@ -1,0 +1,85 @@
+{
+    "status": 1,
+    "message": "",
+    "data": {
+      "toolbars": [{
+        "toolKey": "g1",
+        "name": "g1",
+        "icon": "",
+        "type": "",
+        "order": 0,
+        "children": [{
+          "toolKey": "mapScreen",
+          "name": "全图",
+          "icon": "",
+          "type": "",
+          "order": 0,
+          "children": []
+        }, {
+          "toolKey": "fullScreen",
+          "name": "全屏显示",
+          "icon": "",
+          "type": "",
+          "order": 1,
+          "children": []
+        }]
+      }, {
+        "toolKey": "g2",
+        "name": "g2",
+        "icon": "",
+        "type": "",
+        "order": 1,
+        "children": [{
+          "toolKey": "zoomIn",
+          "name": "放大",
+          "icon": "",
+          "type": "",
+          "order": 0,
+          "children": []
+        }, {
+          "toolKey": "zoomOut",
+          "name": "缩小",
+          "icon": "",
+          "type": "",
+          "order": 1,
+          "children": []
+        }]
+      }, {
+        "toolKey": "g3",
+        "name": "g3",
+        "icon": "",
+        "type": "",
+        "order": 2,
+        "children": [{
+          "toolKey": "measureArea",
+          "name": "量测面积",
+          "icon": "",
+          "type": "",
+          "order": 0,
+          "children": []
+        }, {
+          "toolKey": "measureLength",
+          "name": "量测距离",
+          "icon": "",
+          "type": "",
+          "order": 1,
+          "children": []
+        }]
+      }, {
+        "toolKey": "g5",
+        "name": "g5",
+        "icon": "",
+        "type": "",
+        "order": 5,
+        "children": [{
+          "toolKey": "clear",
+          "name": "清除",
+          "icon": "",
+          "type": "",
+          "order": 0,
+          "children": []
+        }]
+      }]
+    }
+  }
+  

@@ -1,0 +1,114 @@
+{
+  "id": "2205189",
+  "name": "View_Icon",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "View_Icon",
+  "glyphs": [
+    {
+      "icon_id": "5700451",
+      "name": "数据分析",
+      "font_class": "jiangpai",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "6094080",
+      "name": "ic_迎新数据分析",
+      "font_class": "ic_yingxinshujufenxi",
+      "unicode": "e7ba",
+      "unicode_decimal": 59322
+    },
+    {
+      "icon_id": "10024752",
+      "name": "薪资报表",
+      "font_class": "salary-payroll-report",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "13300498",
+      "name": "数据分析",
+      "font_class": "shujufenxi",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "14673783",
+      "name": "薪资报表-01",
+      "font_class": "xinzibaobiao-01",
+      "unicode": "e68e",
+      "unicode_decimal": 59022
+    },
+    {
+      "icon_id": "15805274",
+      "name": "数据分析",
+      "font_class": "shujufenxi1",
+      "unicode": "e662",
+      "unicode_decimal": 58978
+    },
+    {
+      "icon_id": "690381",
+      "name": "学历信息查询",
+      "font_class": "xuelixinxichaxun",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "2019043",
+      "name": "工作经验",
+      "font_class": "gongzuojingyan",
+      "unicode": "e79c",
+      "unicode_decimal": 59292
+    },
+    {
+      "icon_id": "5055297",
+      "name": "计算薪资",
+      "font_class": "jisuanxinzi",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "5427801",
+      "name": "公司",
+      "font_class": "gongsi",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "6289610",
+      "name": "公司",
+      "font_class": "gongsi1",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "7516912",
+      "name": "学历",
+      "font_class": "xueli",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "9626866",
+      "name": "公司",
+      "font_class": "gongsi2",
+      "unicode": "e86d",
+      "unicode_decimal": 59501
+    },
+    {
+      "icon_id": "12608829",
+      "name": "求职发布-工作经验",
+      "font_class": "qiuzhifabu-gongzuojingyan",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "18186530",
+      "name": "018-地图",
+      "font_class": "018-ditu",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    }
+  ]
+}
