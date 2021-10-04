@@ -1,6 +1,6 @@
 <template>
   <div id="mapContent">
-    <iframe id="rythemMap" src="../../../../public/ThematicMaps/ThematicMaps/heatmap_test.html" frameborder="0"></iframe>
+    <iframe id="rythemMap" src="./ThematicMaps/heatmap_test.html" frameborder="0"></iframe>
   </div>
 </template>
 

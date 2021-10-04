@@ -202,14 +202,12 @@
 					url: "http://localhost:6080/arcgis/rest/services/GraduatedColor/MapServer",
 					renderer: classBreaksRenderer,
 				});
-
 				var map = new WebMap({
 					portalItem: {
 						id: "bf024b8d0b4b48f5a486070214e87c5f"
 					},
 					layers: renderLayer
 				});
-
 				var view = new MapView({
 					container: "viewDiv",
 					map: map,
@@ -230,7 +228,6 @@
 					view: view
 				});
 				view.ui.add(legend, "bottom-left");
-				
 			});
 		</script>
 	</head>

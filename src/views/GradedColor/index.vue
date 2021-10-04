@@ -1,6 +1,6 @@
 <template>
 	<div id="mapContent">
-	  <iframe id="rythemMap" src="../../../../public/ThematicMaps/分级色彩图.html" frameborder="0"></iframe>
+	  <iframe id="rythemMap" src="./ThematicMaps/分级色彩图.html" frameborder="0"></iframe>
 	</div>
 </template>
 
