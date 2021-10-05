@@ -26,4 +26,4 @@ src/views/test/img.vue
 src/views/test/lyq.json
 src/core/config/const.js
 src/views/test/tsconfig.json
-src/core/config/const.js
+# src/core/config/const.js
