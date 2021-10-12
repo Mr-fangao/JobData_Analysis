@@ -1,0 +1,36 @@
+<!DOCTYPE HTML
+<html>
+
+<head>
+    <title>矢量地图文档显示</title>
+    <script include="jquery" src="./lib/include-lib-local.js"></script>
+    <script include="mapboxgl" src="./lib/include-mapboxgl-local.js"></script>
+	<link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
+    <script type="text/javascript">
+        /** 地图初始化
+         */
+        function init() {
+            "use strict";
+            //地图容器
+            var map = new mapboxgl.Map({
+                container: 'map',
+                minZoom: 3,
+                zoom: 9,
+                center: [116.39, 39.90]
+            });
+            var navigationControl = new mapboxgl.NavigationControl();
+            map.addControl(navigationControl, 'top-left');
+            var { protocol, ip, port } = window.webclient;
+            var docLayer = new mapboxgl.Zondy.Map.MapDocLayer("热力图", {
+                ip: '110.  40.187.212',
+			    port: '6163',
+                //只显示一个图层,不平铺显示
+                noWrap: true,
+                serverType: 'doc',
+                tileSize: 512
+            });
+            docLayer.addToMap(map);
+        }
+    </script>
+</head>
+</html>

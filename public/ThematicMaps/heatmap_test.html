@@ -134,14 +134,19 @@
 </html> -->
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset='utf-8' />
 	<title>显示一个地图</title>
 	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-	<script include="mapboxgl" src="./mapgis-client-for-javascript-all-v10.5.4.10/dist/include-mapboxgl-local.js"></script>
-	<script include="jquery" src="./mapgis-client-for-javascript-all-v10.5.4.10/dist/include-lib-local.js"></script>
-	<!-- <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
-	<script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script> -->
+	<!-- 本地 -->
+	<!-- <script include="mapboxgl"
+		src="./mapgis-client-for-javascript-all-v10.5.4.10/site/static/libs/include-mapboxgl-local.js"></script>
+	<script include="jquery" src="./mapgis-client-for-javascript-all-v10.5.4.10/site/static/libs/include-lib-local.js">
+	</script> -->
+	<!-- 在线 -->
+	<link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
+	<script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
 
 	<style>
 		body {
@@ -161,74 +166,101 @@
 <body>
 	<div id='map'></div>
 	<script>
-			mapboxgl.accessToken =
-				'pk.eyJ1IjoibXItZmFuZ2FvIiwiYSI6ImNrdWRneHhsODFhNWUycW1heThvZ3Jpc2YifQ.Vn63ovCsqYuuggh33vAiFg';
+		mapboxgl.accessToken =
+			'pk.eyJ1IjoibXItZmFuZ2FvIiwiYSI6ImNrdWRneHhsODFhNWUycW1heThvZ3Jpc2YifQ.Vn63ovCsqYuuggh33vAiFg';
+		var map = new mapboxgl.Map({
+			container: 'map', // container id
+			style: 'mapbox://styles/mapbox/navigation-night-v1', // stylesheet location
+			center: [107, 39], // starting position [lng, lat]
+			zoom: 3.3 // starting zoom
+		});
+		// var {
+		// 	protocol,
+		// 	ip,
+		// 	port
+		// } = window.webclient;
+
+		// var heatmap = new mapboxgl.Zondy.Map.MapDocLayer('热力图', {
+		// 	ip: '110.40.187.212',
+		// 	port: '6163',
+		// 	noWrap: true,
+		// })
+		// heatmap.addToMap(map);
+
+
+		var nav = new mapboxgl.NavigationControl({
+			"showCompass": true,
+			"showZoom": true
+		});
+		map.addControl(nav, 'top-left');
+		map.addControl(new mapboxgl.FullscreenControl(), "top-right");
+
+		/*检查浏览器是否支持全屏*/
+		function checkFullscreenSupport() {
+			return !!(
+				window.document.fullscreenEnabled ||
+				window.document.mozFullScreenEnabled ||
+				window.document.msFullscreenEnabled ||
+				window.document.webkitFullscreenEnabled
+			);
+		}
+	</script>
+</body>
+
+<!-- <body onload="init()">
+	<div id="map" style="width: 100%; height: 100%; position: absolute;">
+	</div>
+	<script>
+		function init() {
+			'use strict'
+			//地图容器
+			// mapboxgl.accessToken =
+			// 	'pk.eyJ1IjoibXItZmFuZ2FvIiwiYSI6ImNrdWRneHhsODFhNWUycW1heThvZ3Jpc2YifQ.Vn63ovCsqYuuggh33vAiFg';
+			// var map = new mapboxgl.Map({
+			// 	container: 'map', // container id
+			// 	style: 'mapbox://styles/mapbox/navigation-night-v1', // stylesheet location
+			// 	center: [107, 39], // starting position [lng, lat]
+			// 	zoom: 3.3 // starting zoom
+			// });
 			var map = new mapboxgl.Map({
 				container: 'map', // container id
 				style: 'mapbox://styles/mapbox/navigation-night-v1', // stylesheet location
 				center: [107, 39], // starting position [lng, lat]
 				zoom: 3.3 // starting zoom
 			});
-			// var {
-			// 	protocol,
-			// 	ip,
-			// 	port
-			// } = window.webclient;
-			// var heatmap = new mapboxgl.Zondy.Map.MapDocLayer('热力图', {
-			// 	ip: '110.40.187.212',
-			// 	port: '6163',
-			// 	noWrap: true,
-			// })
-			// heatmap.addToMap(map);
-
-
-			var nav = new mapboxgl.NavigationControl({
-				"showCompass": true,
-				"showZoom": true
-			});
-			map.addControl(nav, 'top-left');
-			map.addControl(new mapboxgl.FullscreenControl(), "top-right");
-
-			/*检查浏览器是否支持全屏*/
-			function checkFullscreenSupport() {
-				return !!(
-					window.document.fullscreenEnabled ||
-					window.document.mozFullScreenEnabled ||
-					window.document.msFullscreenEnabled ||
-					window.document.webkitFullscreenEnabled
-				);
-			}
-	</script>
-</body>
-
-<!-- <body onload="init()">
-	<div id="mapCon" style="width: 100%; height: 100%; position: absolute;">
-	</div>
-	<script type="text/javascript">
-		function init() {
-			//地图容器
-			var map = new mapboxgl.Map({
-				container: 'mapCon',
-				crs: 'EPSG:4326',
-				minZoom: 3,
-				zoom: 9,
-				center: [116.39, 39.9],
-			})
 			var navigationControl = new mapboxgl.NavigationControl()
 			map.addControl(navigationControl, 'top-left')
-			var docLayer = new mapboxgl.Zondy.Map.MapDocLayer('北京市', {
-				layerID: 'mapgis-doc-beijing',
-				//IP地址
-				ip: 'develop.smaryun.com',
-				//端口号
-				port: 6163,
-				//只显示一个图层,不平铺显示
+
+			var {
+				protocol,
+				ip,
+				port
+			} = window.webclient
+			var docLayer = new mapboxgl.Zondy.Map.MapDocLayer('热力图', {
+				ip: '110.40.187.212',
+				port: '6163',
 				noWrap: true,
 				serverType: 'doc',
 				tileSize: 512,
 			})
 			docLayer.addToMap(map)
 		}
+
+		// mapboxgl.accessToken =
+		// 	'pk.eyJ1IjoibXItZmFuZ2FvIiwiYSI6ImNrdWRneHhsODFhNWUycW1heThvZ3Jpc2YifQ.Vn63ovCsqYuuggh33vAiFg';
+		// var map = new mapboxgl.Map({
+		// 	container: 'map', // container id
+		// 	style: 'mapbox://styles/mapbox/navigation-night-v1', // stylesheet location
+		// 	center: [107, 39], // starting position [lng, lat]
+		// 	zoom: 3.3 // starting zoom
+		// });
+
+		// var heatmap = new mapboxgl.Zondy.Map.MapDocLayer('热力图', {
+		// 	ip: '110.40.187.212',
+		// 	port: '6163',
+		// 	noWrap: true,
+		// })
+		// heatmap.addToMap(map);
 	</script>
 </body> -->
 

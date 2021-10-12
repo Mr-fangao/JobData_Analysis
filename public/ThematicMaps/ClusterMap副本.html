@@ -1,0 +1,247 @@
+<!-- 职位点聚合专题图 -->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <link rel="stylesheet" href="https://js.arcgis.com/4.17/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.17/"></script>
+  <style>
+    html,
+    body,
+    #viewDiv {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #infoDiv {
+      background: white;
+      padding: 10px;
+    }
+
+    .esri-attribution {
+      display: none;
+    }
+
+    .esri-view .esri-view-surface--inset-outline:focus::after {
+      outline: auto 0px Highlight !important;
+      outline: auto 0px -webkit-focus-ring-color !important;
+    }
+  </style>
+
+  <script>
+    require([
+      "esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer", "esri/widgets/Legend", "esri/widgets/Expand",
+      "esri/widgets/Search",
+      "esri/widgets/Home", "esri/widgets/BasemapToggle", "esri/smartMapping/labels/clusters",
+      "esri/smartMapping/popup/clusters", "esri/core/promiseUtils"
+    ], function (
+      Map, MapView, FeatureLayer, Legend, Expand, Search,
+      Home, BasemapToggle, clusterLabelCreator, clusterPopupCreator, promiseUtils
+    ) {
+      //const serviceUrl ="https://services5.arcgis.com/OpFl5VJ2nf9GImPP/arcgis/rest/services/Cluster/FeatureServer";
+      const serviceUrl = "http://localhost:6080/arcgis/rest/services/Cluster/MapServer";
+      const layer = new FeatureLayer({
+        url: serviceUrl,
+        title: null,
+        outFields: ["*"],
+        popupTemplate: {
+          title: "{CNAME}",
+          content: [{
+            type: "fields",
+            fieldInfos: [{
+                fieldName: "JNAME",
+                label: "职位名称"
+              },
+              {
+                fieldName: "EDUCATION",
+                label: "学历要求"
+              },
+              {
+                fieldName: "SALARY",
+                label: "薪资区间"
+              },
+              {
+                fieldName: "EXPERENCE",
+                label: "工作经验"
+              },
+              {
+                fieldName: "CTYPE",
+                label: "公司类型"
+              },
+              {
+                fieldName: "CSIZE",
+                label: "公司规模"
+              },
+              {
+                fieldName: "INDUSTRY",
+                label: "行业领域"
+              },
+              {
+                fieldName: "RECNUM",
+                label: "招聘人数"
+              },
+              {
+                fieldName: "PUB_TIME",
+                label: "发布时间"
+              },
+            ]
+          }]
+        }
+      });
+
+      const map = new Map({
+        basemap: {
+          portalItem: {
+            id: "bf024b8d0b4b48f5a486070214e87c5f"
+          }
+        },
+        layers: [layer]
+      });
+
+      const view = new MapView({
+        container: "viewDiv",
+        map: map,
+        center: [116.39251358116619, 39.91812360584148],
+        zoom: 12
+      });
+
+      let search = new Search({
+        view: view
+      });
+      view.ui.add(search, {
+        position: "top-left",
+        index: 0
+      });
+
+      let homeBtn = new Home({
+        view: view
+      });
+      view.ui.add(homeBtn, "top-left");
+
+      let basemapToggle = new BasemapToggle({
+        view: view,
+        nextBasemap: "streets-night-vector"
+      });
+      view.ui.add(basemapToggle, "bottom-left");
+
+      const legend = new Legend({
+        view: view,
+        container: "legendDiv"
+      });
+
+      const infoDiv = document.getElementById("infoDiv");
+      view.ui.add(new Expand({
+        view: view,
+        content: infoDiv,
+        expandIconClass: "esri-icon-layer-list",
+        expanded: true
+      }), "top-right");
+
+      layer
+        .when()
+        .then(generateClusterConfig)
+        .then(function (featureReduction) {
+          layer.featureReduction = featureReduction;
+          const toggleButton = document.getElementById("toggle-cluster");
+          toggleButton.addEventListener("click", toggleClustering);
+
+          function toggleClustering() {
+            if (isWithinScaleThreshold()) {
+              let fr = layer.featureReduction;
+              layer.featureReduction = fr && fr.type === "cluster" ? null : featureReduction;
+            }
+            toggleButton.innerText = toggleButton.innerText === "执行聚类" ? "取消聚类" : "执行聚类";
+          }
+
+          view.whenLayerView(layer).then(function (layerView) {
+            const filterSelect = document.getElementById("filter");
+            filterSelect.addEventListener("change", function (event) {
+              const newValue = event.target.value;
+              const whereClause = newValue ? "EDUCATION = '" + newValue + "'" : null;
+              layerView.filter = {
+                where: whereClause
+              };
+              view.popup.close();
+            });
+          });
+
+          view.watch("scale", function (scale) {
+            if (toggleButton.innerText === "Disable Clustering") {
+              layer.featureReduction = isWithinScaleThreshold() ?
+                featureReduction : null;
+            }
+          });
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+
+      function isWithinScaleThreshold() {
+        return view.scale > 50000;
+      }
+
+      function generateClusterConfig(layer) {
+        const popupPromise = clusterPopupCreator
+          .getTemplates({
+            layer: layer
+          })
+          .then(function (popupTemplateResponse) {
+            return popupTemplateResponse.primaryTemplate.value;
+          });
+
+        const labelPromise = clusterLabelCreator
+          .getLabelSchemes({
+            layer: layer,
+            view: view
+          })
+          .then(function (labelSchemes) {
+            return labelSchemes.primaryScheme;
+          });
+
+        return promiseUtils
+          .eachAlways([popupPromise, labelPromise])
+          .then(function (result) {
+            const popupTemplate = result[0].value;
+            const primaryLabelScheme = result[1].value;
+            const labelingInfo = primaryLabelScheme.labelingInfo;
+            const clusterMinSize = primaryLabelScheme.clusterMinSize;
+
+            return {
+              type: "cluster",
+              popupTemplate: popupTemplate,
+              labelingInfo: labelingInfo,
+              clusterMinSize: clusterMinSize
+            };
+          })
+          .catch(function (error) {
+            console.error(error);
+          });
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+  <div id="infoDiv" class="esri-widget">
+    <select id="filter" class="esri-select">
+      <option value="">所有</option>
+      <option value="博士">博士</option>
+      <option value="硕士">硕士</option>
+      <option value="本科">本科</option>
+      <option value="大专">大专</option>
+      <option value="中专">中专</option>
+      <option value="中技">中技</option>
+      <option value="高中">高中</option>
+      <option value="初中及以下">初中及以下</option>
+    </select>
+    <div style="padding-top: 10px"> <button id="toggle-cluster" class="esri-button"> 取消聚类 </button> </div>
+    <div id="legendDiv"></div>
+  </div>
+</body>
+
+</html>

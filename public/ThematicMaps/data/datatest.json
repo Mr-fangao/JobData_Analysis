@@ -1,0 +1,239 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 23
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.43408203124999,
+          34.97600151317588
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 11
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.02783203125,
+          34.17999758688084
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 11
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.4228515625,
+          37.09023980307208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 34
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.36767578124999,
+          33.32134852669881
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 56
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          114.60937499999999,
+          36.686041276581925
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.40087890624999,
+          35.585851593232356
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 5
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.7529296875,
+          35.71083783530009
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 6
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          112.91748046874999,
+          36.474306755095235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 6
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          113.84033203125,
+          36.474306755095235
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 4
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          111.46728515624999,
+          35.31736632923788
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 54
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.04882812499999,
+          33.063924198120645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 23
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          116.03759765625,
+          33.17434155100208
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 23
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          119.68505859375,
+          36.491973470593685
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 22
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.13525390625,
+          31.466153715024294
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 1
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.13525390625,
+          31.297327991404266
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 8
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.09130859375,
+          31.109388560814963
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 76
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          120.89355468749999,
+          31.353636941500987
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "Salary": 13
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.640625,
+          31.22219703210317
+        ]
+      }
+    }
+  ]
+}

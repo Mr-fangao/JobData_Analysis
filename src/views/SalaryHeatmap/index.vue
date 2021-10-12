@@ -1,6 +1,6 @@
 <template>
   <div id="mapContent">
-    <iframe id="rythemMap" src="./ThematicMaps/heatmap_test.html" frameborder="0"></iframe>
+    <iframe id="rythemMap" src="./ThematicMaps/heatmap.html" frameborder="0"></iframe>
   </div>
 </template>
 
@@ -14,8 +14,6 @@
 		height: 250px;
 		background-color: rgba(0, 0, 0, 0.4);
 	}
-	
-	
 	//左表样式
 	// 拐角样式
 	.angle-border{
@@ -53,7 +51,7 @@
 	}
 	
 	#mapContent{
-		width: 100%; height: 698px;
+		width: 100%; height: 675px;
 	}
 	#rythemMap{
 		width: 100%;
